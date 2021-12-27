@@ -1,0 +1,100 @@
+{% extends 'admin_files/base.html' %}
+
+{% block content %}
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Categories List</h2>
+          
+        </div>
+        <div>
+            <input type="text" placeholder="Search Categories" class="form-control bg-white">
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <form action="/administration/add_categories/" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">Name</label>
+                            <input type="text" placeholder="Type here" name="cat_name" class="form-control" id="product_name" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="product_slug" class="form-label">Slug</label>
+                            <input type="text" placeholder="Type here" name="cat_slug" class="form-control" id="product_slug" />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Parent</label>
+                            <select class="form-select" name="parent_category">
+                                <option value="1">Main Category</option>
+                                {% for cat in all_categories.all_categories %}
+                                    <option value="{{ cat.id }}">{{cat.cat_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Description</label>
+                            <textarea placeholder="Type here" class="form-control" name="cat_description"></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-primary" type="submit">Create category</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-9">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" />
+                                        </div>
+                                    </th>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Slug</th>
+                                    <th>Order</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for category in all_categories.all_categories %}
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" />
+                                        </div>
+                                    </td>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><b>{{ category.cat_name }}</b></td>
+                                    <td>{{ category.cat_description }}</td>
+                                    <td>{{ category.cat_slug }}</td>
+                                    <td>{{ category.cat_order }}</td>
+                                    <td class="text-end">
+                                        <div class="dropdown">
+                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                            <div class="dropdown-menu">
+                                                
+                                                <a class="dropdown-item" href="#">Edit info</a>
+                                                <a class="dropdown-item text-danger" href="/delete-categories/{{ category.id }}">Delete</a>
+                                            </div>
+                                        </div> <!-- dropdown //end -->
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </div> <!-- .col// -->
+            </div> <!-- .row // -->
+        </div> <!-- card body .// -->
+    </div> <!-- card .// -->
+</section> <!-- content-main end// -->
+
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends 'admin_files/base.html' %}
+
+{% block content %}
+    <section class="content-main">
+        <form action="/insert-product/" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                    {% csrf_token %}
+                <div class="col-12">
+                    <div class="content-header">
+                        <h2 class="content-title">Add New Product</h2>
+                        <div>
+                            <button type="submit" class="btn btn-md rounded font-sm hover-up">Publish</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Product Detail</h4>
+                        </div>
+                        <div class="card-body">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Product title</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="product_name" name="prd_name">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Full description</label>
+                                    <textarea placeholder="Type here" class="form-control" rows="4" name="prd_description"></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Regular price</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="$" type="text" class="form-control" name="prd_price">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">strike price</label>
+                                            <input placeholder="$" type="text" class="form-control" name="prd_strike_price">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label class="form-label">Currency</label>
+                                        <select class="form-select"  name="prd_currency">
+                                            <option> INR </option>
+                                         
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Tax rate</label>
+                                    
+									<select class="form-select"  name="prd_gst">
+                                            <option>5% GST</option>
+                                            <option>10% GST</option>
+                                            <option>18% GST</option>
+                                        </select>
+                                </div>
+                                <label class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" value="1" name="prd_cod_available">
+                                    <span class="form-check-label"> Cash on delivery </span>
+                                </label>
+                        </div>
+                    </div> <!-- card end// -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Shipping</h4>
+                        </div>
+                        <div class="card-body">
+                            
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-4">
+                                            <label for="product_name" class="form-label">Width</label>
+                                            <input type="text" placeholder="inch" class="form-control" id="product_name" name="prd_width">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-4">
+                                            <label for="product_name" class="form-label">Height</label>
+                                            <input type="text" placeholder="inch" class="form-control" id="product_name" name="prd_height">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Weight</label>
+                                    <input type="text" placeholder="gam" class="form-control" id="product_name" name="prd_weight">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Shipping fees</label>
+                                    <input type="text" placeholder="$" class="form-control" id="product_name"  name="prd_shipping_fee">
+                                </div>
+                        </div>
+                    </div> <!-- card end// -->
+                </div>
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Product Image</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-upload">
+                                <img src="assets/imgs/theme/upload.svg" alt="">
+                                <input class="form-control" type="file" name="prd_image">
+                            </div>
+                        </div>
+                    </div> <!-- card end// -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Category Details</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row gx-2">
+                                <div class="col-sm-6 mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" name="prd_parent_category">
+                                        <option> Automobiles </option>
+                                        <option> Home items </option>
+                                        <option> Electronics </option>
+                                        <option> Smartphones </option>
+                                        <option> Sport items </option>
+                                        <option> Baby and Tous </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 mb-3">
+                                    <label class="form-label">Sub-category</label>
+                                    <select class="form-select" name="prd_sub_category">
+                                        <option> Nissan </option>
+                                        <option> Honda </option>
+                                        <option> Mercedes </option>
+                                        <option> Chevrolet </option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Tags</label>
+                                    <input type="text" class="form-control" name="prd_tags">
+                                </div>
+                            </div> <!-- row.// -->
+                        </div>
+                    </div> <!-- card end// -->
+                </div>
+            </div>
+        </form>
+        </section> <!-- content-main end// -->
+        {% endblock %}
