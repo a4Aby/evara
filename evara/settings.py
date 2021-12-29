@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-rhm0u4+0dn8qwtocyf(mnev3#w*8uka5r-atf)x-obv3(f5906
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['noyu.pythonanywhere.com','127.0.0.1']
 
 
 # Application definition
@@ -82,14 +82,13 @@ WSGI_APPLICATION = 'evara.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'evaras',
-        "USER": 'postgres',
-        "PASSWORD" : "123",
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'evara',
+        "USER": 'root',
+        "PASSWORD" : "",
         "HOST" : "localhost"
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

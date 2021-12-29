@@ -5,7 +5,7 @@ from django.db.models.fields import NullBooleanField
 class Categories(models.Model):
     cat_name = models.CharField(max_length=255)
     cat_slug = models.CharField(max_length=255)
-    parent_category = models.CharField(max_length=255)
+    parent_category = models.ForeignKey('self',related_name='children',on_delete=models.CASCADE,blank=True,null=True)
     cat_description = models.TextField()
     cat_status = models.CharField(max_length=10,default='1')
     cat_order = models.CharField(max_length=10,default='1')

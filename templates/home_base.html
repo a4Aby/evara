@@ -476,7 +476,16 @@
                                     </li>
                                     <li class="position-static"><a href="#">Mega menu <i class="fi-rs-angle-down"></i></a>
                                         <ul class="mega-menu">
-                                            {{ tmp_li }}
+                                            {% for parent in parent_category %}
+                                                <li class="sub-mega-menu sub-mega-menu-width-22">
+                                                    <a class="menu-title" href="#">{{parent.cat_name}}</a>
+                                                    <ul>
+                                                        {% for sub_category in parent.children.all %}
+                                                            <li><a href="#">{{sub_category.cat_name}}</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
+                                            {% endfor %}
                                             <li class="sub-mega-menu sub-mega-menu-width-22">
                                                 <a class="menu-title" href="#">Men's Fashion</a>
                                                 <ul>

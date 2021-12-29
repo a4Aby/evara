@@ -6,13 +6,13 @@ from administration.views import categories
 
 # Create your views here.
 def index(request):
-    all_categories = Categories.objects.filter(parent_category = 1)
-    tmp_li = ''
-    for cat in all_categories:
-        tmp_li = tmp_li+'<li class="sub-mega-menu sub-mega-menu-width-22"><a class="menu-title" href="#">{{cat.cat_name}}</a><ul><li><a href="#">Dresses</a></li><li><a href="#">Blouses & Shirts</a></li><li><a href="#">Hoodies & Sweatshirts</a></li><li><a href="#">Wedding Dresses</a></li><li><a href="#">Prom Dresses</a></li><li><a href="#">Cosplay Costumes</a></li></ul></li>'
+    all_categories = Categories.objects.filter(parent_category=None)
+    categories = Categories.objects.all()
     content = {
-        'tmp_li':tmp_li
+        'parent_category':all_categories,
+        'categories':categories
     }
+    print(content)
     return render(request,'index.html',content)
 
 def items(request):
