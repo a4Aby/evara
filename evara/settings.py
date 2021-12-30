@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'administration',
     'accounts',
+    'store',
     'bootstrap4',
+    
 ]
 
 MIDDLEWARE = [
@@ -61,7 +63,11 @@ ROOT_URLCONF = 'evara.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [
+            os.path.join(BASE_DIR,'templates'),
+            os.path.join(BASE_DIR, 'home', 'templates'),
+            os.path.join(BASE_DIR, 'store', 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

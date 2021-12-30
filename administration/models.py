@@ -10,6 +10,9 @@ class Categories(models.Model):
     cat_status = models.CharField(max_length=10,default='1')
     cat_order = models.CharField(max_length=10,default='1')
 
+    def __str__(self):
+        return self.cat_name
+
 
 class Products(models.Model):
     prd_name = models.CharField(max_length=255,default='')

@@ -1,6 +1,9 @@
 from django.http import request
+from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render,redirect
 from .models import Categories, Products
+from .forms import CategoryForm
+
 
 # Create your views here.
 def dashboard(request):
@@ -22,8 +25,11 @@ def add_categories(request):
         cat_description = request.POST['cat_description']
         cat_status = 1
         cat_order = 1
+        if request.POST['parent_category']:
+            category = Categories(cat_name=cat_name,cat_slug=cat_slug,parent_category_id=parent_category,cat_description=cat_description,cat_status=cat_status,cat_order=cat_order)
+        else:    
+            category = Categories(cat_name=cat_name,cat_slug=cat_slug,cat_description=cat_description,cat_status=cat_status,cat_order=cat_order)
 
-        category = Categories(cat_name=cat_name,cat_slug=cat_slug,parent_category=parent_category,cat_description=cat_description,cat_status=cat_status,cat_order=cat_order)
         category.save()
         return redirect("/administration/categories/")
 
@@ -67,3 +73,24 @@ def list_products(request):
     } 
     return render(request,'admin_files/product-list.html',context)
     
+#form
+
+def add_category_form(request):
+    all_categories = Categories.objects.all()
+    submitted = False
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/add_category_form?submitted=True')
+    else:
+        form = CategoryForm
+        if 'submitted' in request.GET:
+            submitted = True
+    data = { 
+        'all_categories' : all_categories,
+        'i' : 0,
+        'form' : form,
+        'submitted' : submitted
+    }
+    return render(request,'add_categories_form.html',data)

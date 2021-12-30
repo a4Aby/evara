@@ -14,30 +14,15 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
+                {% if submitted %}
+                    Category Added Successfully
+                {% else %}
+                    
+                {% endif %}
                 <div class="col-md-3">
-                    <form action="/administration/add_categories/" method="POST">
+                    <form action="" method="POST">
                         {% csrf_token %}
-                        <div class="mb-4">
-                            <label for="product_name" class="form-label">Name</label>
-                            <input type="text" placeholder="Type here" name="cat_name" class="form-control" id="product_name" />
-                        </div>
-                        <div class="mb-4">
-                            <label for="product_slug" class="form-label">Slug</label>
-                            <input type="text" placeholder="Type here" name="cat_slug" class="form-control" id="product_slug" />
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label">Parent</label>
-                            <select class="form-select" name="parent_category">
-                                <option value="">Main Category</option>
-                                {% for cat in all_categories.all_categories %}
-                                    <option value="{{ cat.id }}">{{cat.cat_name}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label">Description</label>
-                            <textarea placeholder="Type here" class="form-control" name="cat_description"></textarea>
-                        </div>
+                        {{ form.as_p }}
                         <div class="d-grid">
                             <button class="btn btn-primary" type="submit">Create category</button>
                         </div>
@@ -62,7 +47,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for category in all_categories.all_categories %}
+                                {% for category in all_categories %}
                                 <tr>
                                     <td class="text-center">
                                         <div class="form-check">

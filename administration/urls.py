@@ -10,5 +10,6 @@ urlpatterns = [
     path('add-new-product/',views.add_new_product,name='add new product'),
     path('insert-product/',views.insert_product,name='insert product'),
     path('product-list/',views.list_products,name='product list'),
+    path('add_category_form/',views.add_category_form,name="add category using form"),
     
 ]
