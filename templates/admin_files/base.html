@@ -37,9 +37,9 @@
       <li class="menu-item"> <a class="menu-link" href="/order-list"> <i class="icon material-icons md-shopping_cart"></i> <span class="text">Order list</span> </a>
        
       </li>
-      <li class="menu-item"> <a class="menu-link" href="tax-slabs.html"> <i class="icon material-icons md-money"></i> <span class="text">Tax Slabs</span> </a> </li>
-		  <li class="menu-item "> <a class="menu-link" href="add-banner-images.html"> <i class="icon material-icons md-image"></i> <span class="text">Banner Images</span> </a> </li>
-		<li class="menu-item "> <a class="menu-link" href="add-pages.html"> <i class="icon material-icons md-pages"></i> <span class="text">Pages</span> </a> </li>
+      <li class="menu-item"> <a class="menu-link" href="#"> <i class="icon material-icons md-money"></i> <span class="text">Tax Slabs</span> </a> </li>
+		  <li class="menu-item "> <a class="menu-link" href="#"> <i class="icon material-icons md-image"></i> <span class="text">Banner Images</span> </a> </li>
+		<li class="menu-item "> <a class="menu-link" href="#"> <i class="icon material-icons md-pages"></i> <span class="text">Pages</span> </a> </li>
     </ul>
     <hr>
     <ul class="menu-aside">
@@ -78,13 +78,13 @@
                     <li class="dropdown nav-item">
                         <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/static/admin/imgs/people/avatar2.jpg" alt="User"></a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                            <a class="dropdown-item" href="{% url 'accounts:change_profile' %}"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
                             <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
                             <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
                             <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
                             <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                            <a class="dropdown-item text-danger" href="{% url 'accounts:log_out' %}"><i class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
                     </li>
                 </ul>

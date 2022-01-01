@@ -25,6 +25,7 @@ from .forms import (
     SignInViaUsernameForm, SignInViaEmailForm, SignInViaEmailOrUsernameForm, SignUpForm,
     RestorePasswordForm, RestorePasswordViaEmailOrUsernameForm, RemindUsernameForm,
     ResendActivationCodeForm, ResendActivationCodeViaEmailForm, ChangeProfileForm, ChangeEmailForm,
+    DashboardForm
 )
 from .models import Activation
 
@@ -77,11 +78,11 @@ class LogInView(GuestOnlyView, FormView):
 
         redirect_to = request.POST.get(REDIRECT_FIELD_NAME, request.GET.get(REDIRECT_FIELD_NAME))
         #url_is_safe = is_safe_url(redirect_to, allowed_hosts=request.get_host(), require_https=request.is_secure())
-
+        
         url_is_safe = True
-        if url_is_safe:
+        if redirect_to != None:
             return redirect(redirect_to)
-
+        
         return redirect(settings.LOGIN_REDIRECT_URL)
 
 
@@ -118,7 +119,7 @@ class SignUpView(GuestOnlyView, FormView):
             act.user = user
             act.save()
 
-            send_activation_email(request, user.email, code)
+            # send_activation_email(request, user.email, code)
 
             messages.success(
                 request, _('You are signed up. To activate the account, follow the link sent to the mail.'))

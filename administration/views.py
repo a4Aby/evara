@@ -1,14 +1,34 @@
+from django.db import connection
 from django.http import request
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render,redirect
 from .models import Categories, Products
 from .forms import CategoryForm
-
-
+from django.views.decorators.csrf import csrf_exempt 
+from django.contrib.auth import authenticate
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+@csrf_exempt
+def login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            return redirect("/administration/")
+        else:
+            messages.success(request,'Ther was an error login')
+            return render(request,'admin_files/login.html')
+    else:
+        return render(request,'admin_files/login.html')
+
+@login_required
 def dashboard(request):
     return render(request,'admin_files/index.html')
 
+@login_required
 def categories(request):
         all_categories = Categories.objects.all()
         data = { 
@@ -16,7 +36,7 @@ def categories(request):
             'i' : 0
         }
         return render(request,'admin_files/categories.html',{"all_categories" : data})
-
+@login_required
 def add_categories(request):
     if request.method == "POST":
         cat_name = request.POST['cat_name']
@@ -32,7 +52,7 @@ def add_categories(request):
 
         category.save()
         return redirect("/administration/categories/")
-
+@login_required
 def delete_categories(request,cat_id):
     record = Categories.objects.get(id = cat_id)
     record.delete()
@@ -40,9 +60,11 @@ def delete_categories(request,cat_id):
 
 
 # products
+@login_required
 def add_new_product(request):
     return render(request,'admin_files/add-new-product.html')
 
+@login_required
 def insert_product(request):
     if request.method == "POST":
         prd_name = request.POST["prd_name"]
@@ -66,7 +88,7 @@ def insert_product(request):
         products_db.save()
     return redirect("/list-product/")
 
-
+@login_required
 def list_products(request):
     context = {
         'products':Products.objects.all(),
@@ -74,7 +96,7 @@ def list_products(request):
     return render(request,'admin_files/product-list.html',context)
     
 #form
-
+@login_required
 def add_category_form(request):
     all_categories = Categories.objects.all()
     submitted = False

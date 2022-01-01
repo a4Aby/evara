@@ -13,6 +13,8 @@ from django.utils.translation import gettext_lazy as _
 class UserCacheMixin:
     user_cache = None
 
+class DashboardForm(UserCacheMixin, forms.Form):
+    password = forms.CharField(label=_('Password'), strip=False, widget=forms.PasswordInput)
 
 class SignIn(UserCacheMixin, forms.Form):
     password = forms.CharField(label=_('Password'), strip=False, widget=forms.PasswordInput)
