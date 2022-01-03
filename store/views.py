@@ -5,6 +5,7 @@ from administration.models import Products
 from django.http import JsonResponse
 import json
 from .models import * 
+from .utils import *
 
 # Create your views here.
 
@@ -20,6 +21,18 @@ def items(request,cat_id):
     }
     print(cartTotal)
     return render(request,'store.html',context)
+
+def cart(request):
+    data = cartData(request)
+    cartTotal = data['cartItems']
+    cartTotal = data['cartItems']
+    items = data['items']
+    
+    context = {
+        'items' : items,
+        'cartTotal' : cartTotal
+    }
+    return render(request,'cart.html',context)
 
 def updateItem(request):
     data = json.loads(request.body)
