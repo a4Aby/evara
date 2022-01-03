@@ -9,12 +9,16 @@ from .models import *
 # Create your views here.
 
 def items(request,cat_id):
-    items = Products.objects.filter(prd_sub_category = cat_id)
-    cartTotal = Order.get_cart_total
+    product_list = Products.objects.filter(prd_sub_category = cat_id)
+    customer = request.user.customer
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    items = order.orderitem_set.all()
+    cartTotal = order.get_cart_items
     context = {
-        'items' : items,
+        'items' : product_list,
         'cartTotal' : cartTotal,
     }
+    print(cartTotal)
     return render(request,'store.html',context)
 
 def updateItem(request):
