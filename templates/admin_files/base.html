@@ -117,6 +117,19 @@
 <!-- Main Script -->
 <script src="/static/admin/js/main.js" type="text/javascript"></script>
 <script src="/static/admin/js/custom-chart.js" type="text/javascript"></script>
+<script>
+    $("#mainCategory").on("change", e => {     
+        var value = $(e.currentTarget).val();  
+        var csrf_token = '{{ csrf_token }}';
+        $.post( "{% url 'administration:get_subcategory' %}", {'mainCategory' : value, 'csrfmiddlewaretoken' : csrf_token} ,function( data  ) {
+            $.each(data, function(index) {
+                $('#sub_category').append('<option value='+data[index].id+'>'+data[index].cat_name+'</option>');
+            });
+            $('#sub_category').append(data);
+        });
+
+    });
+</script>
 </body>
 
 </html>

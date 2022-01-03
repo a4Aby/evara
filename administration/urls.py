@@ -2,6 +2,8 @@ from django.urls import path
 
 from . import views
 
+app_name = 'administration'
+
 urlpatterns = [
     path('login/',views.login,name='login'),
     path('administration/',views.dashboard,name='dashboard'),
@@ -12,5 +14,5 @@ urlpatterns = [
     path('insert-product/',views.insert_product,name='insert product'),
     path('product-list/',views.list_products,name='product list'),
     path('add_category_form/',views.add_category_form,name="add category using form"),
-    
+    path('get_subcategory',views.get_subcategory,name="get_subcategory"),
 ]
