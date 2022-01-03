@@ -4,11 +4,12 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render,redirect
 from .models import Categories, Products
 from .forms import CategoryForm
-from django.views.decorators.csrf import csrf_exempt 
+from django.views.decorators.csrf import csrf_exempt, csrf_protect 
 from django.contrib.auth import authenticate
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.utils.safestring import mark_safe
 # Create your views here.
 @csrf_exempt
 def login(request):
@@ -58,11 +59,22 @@ def delete_categories(request,cat_id):
     record.delete()
     return redirect("/administration/categories/")
 
+def get_subcategory(request):
+
+    all_categories = Categories.objects.filter(parent_category=request.POST['mainCategory'])
+    return HttpResponse(all_categories, mimetype="text/json")
 
 # products
+@csrf_protect
 @login_required
 def add_new_product(request):
-    return render(request,'admin_files/add-new-product.html')
+    all_categories = Categories.objects.filter(parent_category=None)
+    
+    content = {
+        'parent_category':all_categories,
+    }
+
+    return render(request,'admin_files/add-new-product.html',content)
 
 @login_required
 def insert_product(request):
