@@ -116,13 +116,11 @@
                             <div class="row gx-2">
                                 <div class="col-sm-6 mb-3">
                                     <label class="form-label">Category</label>
-                                    <select class="form-select" name="prd_parent_category">
-                                        <option> Automobiles </option>
-                                        <option> Home items </option>
-                                        <option> Electronics </option>
-                                        <option> Smartphones </option>
-                                        <option> Sport items </option>
-                                        <option> Baby and Tous </option>
+                                    <select class="form-select" name="prd_parent_category" id="mainCategory">
+                                        <option> Select Main Category </option>
+                                        {% for category in parent_category %}
+                                        <option value="{{ category.id }}"> {{ category.cat_name }} </option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                                 <div class="col-sm-6 mb-3">
