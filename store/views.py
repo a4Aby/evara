@@ -25,7 +25,7 @@ def items(request,cat_id):
 def cart(request):
     data = cartData(request)
     cartTotal = data['cartItems']
-    cartTotal = data['cartItems']
+    order = data['order']
     items = data['items']
     
     context = {
