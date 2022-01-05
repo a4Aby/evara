@@ -125,17 +125,33 @@
                                 </div>
                                 <div class="col-sm-6 mb-3">
                                     <label class="form-label">Sub-category</label>
-                                    <select class="form-select" name="prd_sub_category">
-                                        <option> Nissan </option>
-                                        <option> Honda </option>
-                                        <option> Mercedes </option>
-                                        <option> Chevrolet </option>
+                                    <select class="form-select" id="sub_category" name="prd_sub_category">
+                                    
                                     </select>
                                 </div>
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Tags</label>
                                     <input type="text" class="form-control" name="prd_tags">
                                 </div>
+                            </div> <!-- row.// -->
+                        </div>
+                    </div> <!-- card end// -->
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Type</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row gx-2">
+                                <div class="col-sm-6 mb-3">
+                                    <input class="form-check-input" name="is_featured" checked value="1" type="checkbox" aria-label="Checkbox for following text input">
+                                    <label class="form-label">Featured</label>
+                                </div>
+                                <div class="col-sm-6 mb-3">
+                                    <input class="form-check-input" name="is_popular" checked value="1" type="checkbox" aria-label="Checkbox for following text input">
+                                    <label class="form-label">Popular</label>
+                                </div>
+                                
                             </div> <!-- row.// -->
                         </div>
                     </div> <!-- card end// -->

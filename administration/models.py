@@ -34,3 +34,6 @@ class Products(models.Model):
     prd_order = models.CharField(max_length=10,default='1')
     prd_image = models.ImageField(null=True,blank=True, upload_to='uploads/')
     prd_created_on = models.DateField(auto_now_add=True)
+    prd_is_featured = models.CharField(max_length=10,default='0')
+    prd_is_popular = models.CharField(max_length=10,default='0')
+

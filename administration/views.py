@@ -1,6 +1,7 @@
 from django.db import connection
 from django.http import request
 from django.http import HttpResponse,HttpResponseRedirect
+from django.http.response import JsonResponse
 from django.shortcuts import render,redirect
 from .models import Categories, Products
 from .forms import CategoryForm
@@ -10,7 +11,14 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.safestring import mark_safe
+from django.core import serializers
 # Create your views here.
+
+def get_subcategory(request):
+    all_categories = Categories.objects.filter(parent_category=request.POST['mainCategory'])
+    jsonData = serializers.serialize('json',all_categories)
+    return JsonResponse(jsonData,safe=False)
+
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
@@ -59,10 +67,6 @@ def delete_categories(request,cat_id):
     record.delete()
     return redirect("/administration/categories/")
 
-def get_subcategory(request):
-
-    all_categories = Categories.objects.filter(parent_category=request.POST['mainCategory'])
-    return HttpResponse(all_categories, mimetype="text/json")
 
 # products
 @csrf_protect
@@ -94,11 +98,14 @@ def insert_product(request):
         prd_parent_category = request.POST["prd_parent_category"]
         prd_sub_category = request.POST["prd_sub_category"]
         prd_tags = request.POST["prd_tags"]
+        prd_is_featured = request.POST["is_featured"]
+        prd_is_popular = request.POST["is_popular"]
+
         prd_order =1
         prd_status = 1
-        products_db = Products(prd_name=prd_name,prd_description=prd_description,prd_price=prd_price,prd_strike_price=prd_strike_price,prd_gst=prd_gst,prd_cod_available=prd_cod_available,prd_width=prd_width,prd_height=prd_height,prd_weight=prd_weight,prd_shipping_fee=prd_shipping_fee,prd_currency=prd_currency,prd_image=prd_image,prd_parent_category=prd_parent_category,prd_sub_category=prd_sub_category,prd_tags=prd_tags,prd_order=prd_order,prd_status=prd_status)
+        products_db = Products(prd_is_featured=prd_is_featured,prd_is_popular=prd_is_popular,prd_name=prd_name,prd_description=prd_description,prd_price=prd_price,prd_strike_price=prd_strike_price,prd_gst=prd_gst,prd_cod_available=prd_cod_available,prd_width=prd_width,prd_height=prd_height,prd_weight=prd_weight,prd_shipping_fee=prd_shipping_fee,prd_currency=prd_currency,prd_image=prd_image,prd_parent_category=prd_parent_category,prd_sub_category=prd_sub_category,prd_tags=prd_tags,prd_order=prd_order,prd_status=prd_status)
         products_db.save()
-    return redirect("/list-product/")
+    return redirect("/product-list/")
 
 @login_required
 def list_products(request):

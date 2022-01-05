@@ -122,10 +122,9 @@
         var value = $(e.currentTarget).val();  
         var csrf_token = '{{ csrf_token }}';
         $.post( "{% url 'administration:get_subcategory' %}", {'mainCategory' : value, 'csrfmiddlewaretoken' : csrf_token} ,function( data  ) {
-            $.each(data, function(index) {
-                $('#sub_category').append('<option value='+data[index].id+'>'+data[index].cat_name+'</option>');
-            });
-            $('#sub_category').append(data);
+            $.each(JSON.parse(data), function (key, data) {
+                $('#sub_category').append('<option value='+data.pk+'>'+data.fields.cat_name+'</option>');
+            })
         });
 
     });
