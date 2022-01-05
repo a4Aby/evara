@@ -11,15 +11,15 @@ from .utils import *
 
 def items(request,cat_id):
     product_list = Products.objects.filter(prd_sub_category = cat_id)
-    customer = request.user.customer
-    order, created = Order.objects.get_or_create(customer=customer, complete=False)
-    items = order.orderitem_set.all()
-    cartTotal = order.get_cart_items
+    #customer = request.user.customer
+    data = cartData(request)
+    cartTotal = data['cartItems']
+    order = data['order']
+    
     context = {
         'items' : product_list,
         'cartTotal' : cartTotal,
     }
-    print(cartTotal)
     return render(request,'store.html',context)
 
 def cart(request):

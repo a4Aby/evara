@@ -20,7 +20,7 @@ def cookieCart(request):
 			if(cart[i]['quantity']>0): #items with negative quantity = lot of freebies  
 				cartItems += cart[i]['quantity']
 
-				product = Product.objects.get(id=i)
+				product = Products.objects.get(id=i)
 				total = (product.price * cart[i]['quantity'])
 
 				order['get_cart_total'] += total
@@ -28,8 +28,8 @@ def cookieCart(request):
 
 				item = {
 				'id':product.id,
-				'product':{'id':product.id,'name':product.name, 'price':product.price, 
-				'imageURL':product.imageURL}, 'quantity':cart[i]['quantity'],
+				'product':{'id':product.id,'name':product.prd_name, 'price':product.prd_price, 
+				'imageURL':product.prd_image}, 'quantity':cart[i]['quantity'],
 				'digital':product.digital,'get_total':total,
 				}
 				items.append(item)
@@ -43,7 +43,7 @@ def cookieCart(request):
 
 def cartData(request):
 	if request.user.is_authenticated:
-		customer = request.user.customer
+		customer, created = Customer.objects.get_or_create(user=request.user,defaults={'name': request.user.username,'email':request.user.email})
 		order, created = Order.objects.get_or_create(customer=customer, complete=False)
 		items = order.orderitem_set.all()
 		cartItems = order.get_cart_items
