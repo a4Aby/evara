@@ -28,7 +28,7 @@ class Products(models.Model):
     prd_shipping_fee = models.CharField(max_length=100,default='')
     prd_image = models.CharField(max_length=100,default='')
     prd_parent_category = models.CharField(max_length=100,default='')
-    prd_sub_category = models.CharField(max_length=100,default='')
+    prd_sub_category = models.ForeignKey(Categories,on_delete=models.CASCADE,blank=True,null=True)
     prd_tags = models.CharField(max_length=100,default='')
     prd_status = models.CharField(max_length=10,default='1')
     prd_order = models.CharField(max_length=10,default='1')
@@ -37,3 +37,5 @@ class Products(models.Model):
     prd_is_featured = models.CharField(max_length=10,default='0')
     prd_is_popular = models.CharField(max_length=10,default='0')
 
+    def __str__(self):
+        return self.prd_name
