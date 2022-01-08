@@ -31,8 +31,8 @@ def cookieCart(request):
 				}
 				items.append(item)
 
-				if product.digital == False:
-					order['shipping'] = True
+				#if product.digital == False:
+				#	order['shipping'] = True
 		except:
 			pass
 			
