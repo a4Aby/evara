@@ -86,15 +86,35 @@ WSGI_APPLICATION = 'evara.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'evara',
-        "USER": 'root',
-        "PASSWORD" : "",
-        "HOST" : "localhost"
+import socket
+
+try:
+    HOSTNAME = socket.gethostname()
+except:
+    HOSTNAME = 'localhost'
+#print(HOSTNAME)
+
+if HOSTNAME == 'Aby' or HOSTNAME == 'localhost':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'evara',
+            "USER": 'root',
+            "PASSWORD" : "",
+            "HOST" : "localhost"
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'evara$evara',
+            "USER": 'evara',
+            "PASSWORD" : "Evara123#5",
+            "HOST" : "evara.mysql.pythonanywhere-services.com"
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
