@@ -520,9 +520,6 @@
                                             <li><a href="/about/">Home 1 </a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="#">Lorem Ipsum</a>
-                                  
-                                    </li>
                                     <li class="position-static"><a href="#">Mega menu <i class="fi-rs-angle-down"></i></a>
                                         <ul class="mega-menu">
                                             {% for parent in parent_category %}
@@ -579,13 +576,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                     <li><a href="#">Lorem Ipsum</a>
-                                      
-                                    </li>
-                                     <li><a href="#">Lorem Ipsum</a>
-                                      
-                                    </li>
-                                    <li>
+                                     <li>
                                         <a href="#">Contact</a>
                                     </li>
                                 </ul>
@@ -812,12 +803,35 @@
   <script src="/static/js/plugins/jquery.vticker-min.js"></script>
   <script src="/static/js/plugins/jquery.theia.sticky.js"></script>
   <script src="/static/js/plugins/jquery.elevatezoom.js"></script>
+  <script src="/static/js/filter.js"></script>
   <!-- Template  JS -->
   <script src="/static/js/main.js"></script>
   <script src="/static/js/shop.js"></script>
+  <script>
+        function categoryfilter(cId){
+            $('.productList').each(function( index ) {
+                console.log( $(this).attr('category'));
+                if(cId == $(this).attr('category') )
+                    $(this).hide();
+                else
+                    $(this).show();
+            });
+        }
 
+        $(".sortby").click(function (e) {
+            var result = $('div').sort(function (a, b) {
+                
+                var contentA =parseInt( $(a).data('sort'));
+                var contentB =parseInt( $(b).data('sort'));
+
+                return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
+            });
+        });
+        
+  </script>
   <!-- Cart  JS -->
   <script src="/static/js/cart.js"></script>
+  
 </body>
 
 </html>

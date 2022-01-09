@@ -15,7 +15,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3">
-                    <form action="/administration/add_categories/" method="POST">
+                    <form action="/administration/add_categories/" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="mb-4">
                             <label for="product_name" class="form-label">Name</label>
@@ -38,6 +38,17 @@
                             <label class="form-label">Description</label>
                             <textarea placeholder="Type here" class="form-control" name="cat_description"></textarea>
                         </div>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Category Image</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="input-upload">
+                                    <img src="assets/imgs/theme/upload.svg" alt="">
+                                    <input class="form-control" type="file" name="cat_image">
+                                </div>
+                            </div>
+                        </div> <!-- card end// -->
                         <div class="d-grid">
                             <button class="btn btn-primary" type="submit">Create category</button>
                         </div>
@@ -98,3 +109,4 @@
 </section> <!-- content-main end// -->
 
 {% endblock %}
+

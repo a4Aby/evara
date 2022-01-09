@@ -9,6 +9,9 @@ class Categories(models.Model):
     cat_description = models.TextField()
     cat_status = models.CharField(max_length=10,default='1')
     cat_order = models.CharField(max_length=10,default='1')
+    cat_image = models.CharField(max_length=100,default='')
+    cat_image = models.ImageField(null=True,blank=True, upload_to='uploads/')
+
 
     def __str__(self):
         return self.cat_name

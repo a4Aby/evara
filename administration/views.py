@@ -54,10 +54,13 @@ def add_categories(request):
         cat_description = request.POST['cat_description']
         cat_status = 1
         cat_order = 1
+        cat_image = request.FILES["cat_image"]
+
+
         if request.POST['parent_category']:
-            category = Categories(cat_name=cat_name,cat_slug=cat_slug,parent_category_id=parent_category,cat_description=cat_description,cat_status=cat_status,cat_order=cat_order)
+            category = Categories(cat_name=cat_name,cat_slug=cat_slug,parent_category_id=parent_category,cat_description=cat_description,cat_status=cat_status,cat_order=cat_order,cat_image=cat_image)
         else:    
-            category = Categories(cat_name=cat_name,cat_slug=cat_slug,cat_description=cat_description,cat_status=cat_status,cat_order=cat_order)
+            category = Categories(cat_name=cat_name,cat_slug=cat_slug,cat_description=cat_description,cat_status=cat_status,cat_order=cat_order,cat_image=cat_image)
 
         category.save()
         return redirect("/administration/categories/")
@@ -83,6 +86,8 @@ def add_new_product(request):
 @login_required
 def insert_product(request):
     if request.method == "POST":
+
+        prd_sub_category = Categories.objects.get(id=request.POST["prd_sub_category"])
         prd_name = request.POST["prd_name"]
         prd_description = request.POST["prd_description"]
         prd_price = request.POST["prd_price"]
@@ -96,7 +101,7 @@ def insert_product(request):
         prd_shipping_fee = request.POST["prd_shipping_fee"]
         prd_image = request.FILES["prd_image"]
         prd_parent_category = request.POST["prd_parent_category"]
-        prd_sub_category = request.POST["prd_sub_category"]
+        prd_sub_category = prd_sub_category
         prd_tags = request.POST["prd_tags"]
         prd_is_featured = request.POST["is_featured"]
         prd_is_popular = request.POST["is_popular"]

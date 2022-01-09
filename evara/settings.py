@@ -94,17 +94,7 @@ except:
     HOSTNAME = 'localhost'
 #print(HOSTNAME)
 
-if HOSTNAME == 'Aby' or HOSTNAME == 'localhost':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'evara',
-            "USER": 'root',
-            "PASSWORD" : "",
-            "HOST" : "localhost"
-        }
-    }
-else:
+if HOSTNAME == 'Aby' or HOSTNAME == 'localhost' :
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -114,6 +104,17 @@ else:
             "HOST" : "evara.mysql.pythonanywhere-services.com"
         }
     }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'evara',
+            "USER": 'root',
+            "PASSWORD" : "",
+            "HOST" : "localhost"
+        }
+    }
+    
 
 
 # Password validation
