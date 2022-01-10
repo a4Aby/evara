@@ -819,17 +819,29 @@
         }
 
         $(".sortby").click(function (e) {
-            var result = $('div').sort(function (a, b) {
-                
-                var contentA =parseInt( $(a).data('sort'));
-                var contentB =parseInt( $(b).data('sort'));
-
-                return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
-            });
-
+            $order=$(this).data("orderby");
+		    $sortBy=$(this).data("sortby");
             
+            var ref_this = $("ul#myTab li button.active");
+            var curDivId = ref_this.attr('aria-controls');
+            var curdiv = $("#"+curDivId);
+
+            var divList = curdiv.find('.productList');
+
+            divList.sort(function(a, b){
+
+                if($order == 'asc'){
+                    return $(a).data("price")-$(b).data("price")
+                }else{
+                    return $(b).data("price")-$(a).data("price")
+                }
+
+            });
+            curdiv.find('.product-grid-4').html(divList);
+
         });
-        
+            
+
   </script>
   <!-- Cart  JS -->
   <script src="/static/js/cart.js"></script>

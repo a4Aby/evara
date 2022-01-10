@@ -305,13 +305,14 @@
                         <!--End nav-tabs-->
                         <div class="tab-content wow fadeIn animated" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
-                                <div class="row product-grid-4 ">
+                                <div class="row product-grid-4 " id="tab1">
                                     {% for product in all_products %}
                                         {% if product.prd_is_featured %}
                                         <div class="col-lg-4 col-md-4 col-12 col-sm-6 productList" 
                                         category="{{ product.prd_parent_category }}"
                                         data-subcategory="{{ product.prd_sub_category_id }}"
                                         data-price="{{ product.prd_price }}"
+
                                         >
                                             <div class="product-cart-wrap mb-30">
                                                 <div class="product-img-action-wrap">

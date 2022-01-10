@@ -1,3 +1,4 @@
+from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from administration.models import Categories, Products
@@ -11,6 +12,7 @@ def index(request):
     new_arrivals = Products.objects.filter(prd_created_on__gte=datetime.now()-timedelta(days=7) )
 
     categories = Categories.objects.all()
+
     content = {
         'parent_category':all_categories,
         'categories':categories,

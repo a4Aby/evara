@@ -103,8 +103,8 @@ def insert_product(request):
         prd_parent_category = request.POST["prd_parent_category"]
         prd_sub_category = prd_sub_category
         prd_tags = request.POST["prd_tags"]
-        prd_is_featured = request.POST["is_featured"]
-        prd_is_popular = request.POST["is_popular"]
+        prd_is_featured = request.POST.get("is_featured",'0')
+        prd_is_popular = request.POST.get("is_popular",'0')
 
         prd_order =1
         prd_status = 1
