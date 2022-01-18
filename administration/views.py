@@ -3,6 +3,8 @@ from django.http import request
 from django.http import HttpResponse,HttpResponseRedirect
 from django.http.response import JsonResponse
 from django.shortcuts import render,redirect
+
+from store.models import Order, Wishlist
 from .models import Categories, Products 
 from .forms import CategoryForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect 
@@ -13,6 +15,29 @@ from django.contrib.auth.decorators import login_required
 from django.utils.safestring import mark_safe
 from django.core import serializers
 # Create your views here.
+
+def wishList(request):
+    wishList = Wishlist.objects.all()
+    all_categories = Categories.objects.all()
+
+    data = { 
+            'wishList' : wishList,
+            'all_categories' : all_categories,
+        }
+    return render(request,'admin_files/wishList.html', data)
+
+
+
+def orderList(request):
+    orderList = Order.objects.all()
+    all_categories = Categories.objects.all()
+
+    data = { 
+            'orderList' : orderList,
+            'all_categories' : all_categories,
+        }
+    return render(request,'admin_files/orderList.html', data)
+
 
 def get_subcategory(request):
     all_categories = Categories.objects.filter(parent_category=request.POST['mainCategory'])

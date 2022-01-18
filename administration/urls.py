@@ -15,4 +15,6 @@ urlpatterns = [
     path('product-list/',views.list_products,name='product list'),
     path('add_category_form/',views.add_category_form,name="add category using form"),
     path('get_subcategory',views.get_subcategory,name="get_subcategory"),
+    path('order-list',views.orderList,name="orderList"),
+    path('wish-list',views.wishList,name="wishList"),
 ]

@@ -1,0 +1,75 @@
+{% extends 'admin_files/base.html' %}
+{% block content %}
+  <section class="content-main">
+    <div class="content-header">
+      <div>
+        <h2 class="content-title card-title">Order List</h2>
+      </div>
+    </div>
+    <div class="card mb-4">
+      <header class="card-header">
+        <div class="row align-items-center">
+          <div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
+            <select class="form-select">
+              <option selected>All category</option>
+              {% for category in all_categories %}
+              <option value="{{category}}">{{category}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-2 col-6">
+            <input type="date" value="02.05.2021" class="form-control">
+          </div>
+          <div class="col-md-2 col-6">
+            <select class="form-select">
+              <option selected>Status</option>
+              <option value="deliverd" >Deliverd</option>
+              <option value="pending" >Pending</option>
+              <option>Show all</option>
+            </select>
+          </div>
+        </div>
+        </header>
+      <!-- card-header end// -->
+      <div class="card-body">
+        <article class="itemlist">
+          <div class="row align-items-center">
+            <div class="col col-check flex-grow-0">
+              <p>ID</p>
+            </div>
+            <div class="col-lg-3 col-sm-4 col-8 flex-grow-1 col-name">
+              <p>CUSTOMER</p>
+            </div>
+            <div class="col-lg-1 col-sm-2 col-4 col-price"> <span>PRICE</span> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>CATEGORY</span> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>PRODUCT</span> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-date"> <span>CART DATE</span> </div>
+          </div>
+          <!-- row .// --> 
+        </article>
+        <!-- itemlist  .// -->
+        {% for row in orderList %}
+        <article class="itemlist">
+          <div class="row align-items-center">
+            <div class="col col-check flex-grow-0">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox">
+              </div>
+            </div>
+            <div class="col-lg-1 col-sm-2 col-4 col-price"> <span>{{ row.prd_currency }} {{ row.prd_price }}</span> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>{{ row.prd_parent_category }}/{{ row.prd_sub_category }}</span> </div>
+            <div class="col-lg-1 col-sm-2 col-4 col-status"> <span class="badge rounded-pill alert-success">Active</span> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-date"> <span>{{ row.prd_created_on }}</span> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-action text-end"> <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a> <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> Delete </a> </div>
+          </div>
+          <!-- row .// --> 
+        </article>
+        {% endfor %}
+        <!-- itemlist  .// -->
+        
+        
+      </div>
+      <!-- card-body end// --> 
+    </div>
+    </section>
+  {% endblock %}
