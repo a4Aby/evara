@@ -900,7 +900,7 @@
             $.post( "{% url 'store:add_wishlist' %}",{'productId' : $(this).data('productid'), 'csrfmiddlewaretoken' : "{{ csrf_token }}"}, function( data ) {
              if(data.Wishlistcount > 0){
                 $(".WishlistcountDiv").show();
-                $(".Wishlistcount").val(data.Wishlistcount);
+                $(".Wishlistcount").html(data.Wishlistcount);
              }
             }, "json");
         });
