@@ -263,8 +263,8 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2 WishlistcountDiv"
-                                {% if Wishlistcount != 0 %} 
-                                hidden
+                                {% if not Wishlistcount  %} 
+                                style="display: none;"
                                 {% endif %}
                                 >
                                     <a href="#">
@@ -274,7 +274,7 @@
                                 </div>
                                 <div class="header-action-icon-2"
                                 {% if cartTotal is none %}
-                                hidden
+                                style="display: none;"
                                 {% endif %}
                                 >
                                     <a class="mini-cart-icon" href="/store/cart">
