@@ -234,7 +234,7 @@
                                 {% if user.is_authenticated %}
                                 <li><i class="fi-rs-user"></i><a href="{% url 'accounts:change_profile' %}">{{user.username}}</a></li>
                                 {% else %}
-                                <li><i class="fi-rs-user"></i><a href="{% url 'accounts:log_in' %}">Log In / Sign Up</a></li>
+                                <li><i class="fi-rs-user"></i><a href="{% url 'accounts:change_profile' %}">Log In / Sign Up</a></li>
                                 {% endif %}
                             </ul>
                         </div>
