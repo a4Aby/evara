@@ -32,10 +32,11 @@ def index(request):
     all_categories = Categories.objects.filter(parent_category=None)
     all_products = Products.objects.filter()
     new_arrivals = Products.objects.filter(prd_created_on__gte=datetime.now()-timedelta(days=7) )
-    if request.user :
+    Wishlistcount = 0
+    if request.user.is_authenticated :
         customer, created = Customer.objects.get_or_create(user=request.user,defaults={'name': request.user.username,'email':request.user.email})
-
-    Wishlistcount = Wishlist.objects.filter(customer = customer).count()
+        Wishlistcount = Wishlist.objects.filter(customer = customer).count()
+    
     categories = Categories.objects.all()
 
     content = {
