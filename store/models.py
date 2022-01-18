@@ -1,9 +1,9 @@
+from itertools import product
 from django.db import models
 from administration.models import Products
 from django.contrib.auth.models import User
 
 # Create your models here.
-
 
 class Customer(models.Model):
 	user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -65,3 +65,8 @@ class ShippingAddress(models.Model):
 
 	def __str__(self):
 		return self.address
+
+class Wishlist(models.Model):
+	product = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
+	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
+

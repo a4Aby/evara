@@ -1,0 +1,9 @@
+<input type="hidden" name="choosedCat" id="choosedCat" value="All" >
+<div class="widget-category mb-30">
+    <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
+    <ul class="categories">
+        {% for category in parent_category %}
+            <li onclick="categoryfilter('{{ category.id }}')"><a>{{ category }}</a></li>
+        {% endfor %}
+    </ul>
+</div>

@@ -223,14 +223,14 @@
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info header-info-right">
                             <ul>
-                                <li>
+                                <!-- <li>
                                     <a class="language-dropdown-active" href="#"> <i class="fi-rs-world"></i> English <i class="fi-rs-angle-small-down"></i></a>
                                     <ul class="language-dropdown">
                                         <li><a href="#"><img src="/static/imgs/theme/flag-fr.png" alt="">Français</a></li>
                                         <li><a href="#"><img src="/static/imgs/theme/flag-dt.png" alt="">Deutsch</a></li>
                                         <li><a href="#"><img src="/static/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
                                     </ul>
-                                </li>
+                                </li> -->
                                 <li><i class="fi-rs-user"></i><a href="{% url 'accounts:log_in' %}">Log In / Sign Up</a></li>
                             </ul>
                         </div>
@@ -247,31 +247,32 @@
                     <div class="header-right">
                         <div class="search-style-2">
                             <form action="#">
-                                <select class="select-active">
+                                <select class="select-active" >
                                     <option>All Categories</option>
-                                    <option>Women's</option>
-                                    <option>Men's</option>
-                                    <option>Cellphones</option>
-                                    <option>Computer</option>
-                                    <option>Electronics</option>
-                                    <option> Accessories</option>
-                                    <option>Home & Garden</option>
-                                    <option>Luggage</option>
-                                    <option>Shoes</option>
-                                    <option>Mother & Kids</option>
+                                    {% for category in parent_category %}
+                                    <option value="{{ category }}">{{ category }}</option>
+                                    {% endfor %}
                                 </select>
-                                <input type="text" placeholder="Search for items...">
+                                <input type="text" id="searchItem" placeholder="Search for items...">
                             </form>
                         </div>
                         <div class="header-action-right">
                             <div class="header-action-2">
-                                <div class="header-action-icon-2">
+                                <div class="header-action-icon-2 WishlistcountDiv"
+                                {% if Wishlistcount is none %} 
+                                hidden
+                                {% endif %}
+                                >
                                     <a href="#">
                                         <img class="svgInject" alt="Evara" src="/static/imgs/theme/icons/icon-heart.svg">
-                                        <span class="pro-count blue">4</span>
+                                        <span class="pro-count blue Wishlistcount">{{Wishlistcount}}</span>
                                     </a>
                                 </div>
-                                <div class="header-action-icon-2">
+                                <div class="header-action-icon-2"
+                                {% if cartTotal is none %}
+                                hidden
+                                {% endif %}
+                                >
                                     <a class="mini-cart-icon" href="/store/cart">
                                         <img alt="Evara" src="/static/imgs/theme/icons/icon-cart.svg">
                                         <span class="pro-count blue">{{cartTotal}}</span>
@@ -515,10 +516,10 @@
                                        
                                     </li>
                                     <li>
-                                        <a href="#">About <i class="fi-rs-angle-down"></i></a>
-										 <ul class="sub-menu">
+                                        <a href="/about/">About </a>
+										 <!-- <ul class="sub-menu">
                                             <li><a href="/about/">Home 1 </a></li>
-                                        </ul>
+                                        </ul> -->
                                     </li>
                                     <li class="position-static"><a href="#">Mega menu <i class="fi-rs-angle-down"></i></a>
                                         <ul class="mega-menu">
@@ -532,7 +533,7 @@
                                                     </ul>
                                                 </li>
                                             {% endfor %}
-                                            <li class="sub-mega-menu sub-mega-menu-width-22">
+                                            <!-- <li class="sub-mega-menu sub-mega-menu-width-22">
                                                 <a class="menu-title" href="#">Men's Fashion</a>
                                                 <ul>
                                                     <li><a href="#">Jackets</a></li>
@@ -573,7 +574,7 @@
                                                         </h3>
                                                     </div>
                                                 </div>
-                                            </li>
+                                            </li> -->
                                         </ul>
                                     </li>
                                      <li>
@@ -809,12 +810,46 @@
   <script src="/static/js/shop.js"></script>
   <script>
         function categoryfilter(cId){
+            $('#choosedCat').val(cId);
+            filter();
+        }
+
+        function filter(){
+            var choosedCat = $('#choosedCat').val();
+            var choosedPrice = $('#choosedPrice').val();
+            // console.log('choosedCat :'+choosedCat+'choosedPrice :'+choosedPrice);
+            var priceFrom = $('#priceFrom').val();
+            var priceTo = $('#priceTo').val();
+
             $('.productList').each(function( index ) {
-                console.log( $(this).attr('category'));
-                if(cId == $(this).attr('category') )
-                    $(this).hide();
-                else
+                var product = $(this);
+                if(choosedCat == "All"){
+                    allowCat = true;
+                }else if(choosedCat == product.data('category')){
+                    allowCat = true;
+                }else{
+                    allowCat = false;
+                }
+
+
+                if(choosedPrice == "ALL"){
+                    priceAllow = true
+                }else{
+                    if(parseFloat(product.data('price')) >= priceFrom && parseFloat(product.data('price')) <= priceTo)
+                        priceAllow = true;
+                    else
+                        priceAllow = false;
+                }
+
+                console.log(priceAllow);
+                if( allowCat 
+                && priceAllow   
+                )
+                {
                     $(this).show();
+                }else{
+                    $(this).hide();
+                }
             });
         }
 
@@ -824,24 +859,72 @@
             
             var ref_this = $("ul#myTab li button.active");
             var curDivId = ref_this.attr('aria-controls');
-            var curdiv = $("#"+curDivId);
-
-            var divList = curdiv.find('.productList');
+            if (typeof curDivId === "undefined") {
+                var curdiv = $(".productListMain");
+                var divList = $(".productList");
+            }else{
+                var curdiv = $("#"+curDivId);
+                var divList = curdiv.find('.productList');
+            }
+            
 
             divList.sort(function(a, b){
-
                 if($order == 'asc'){
-                    return $(a).data("price")-$(b).data("price")
+                    if($sortBy == 'price')
+                        return $(a).data("price")-$(b).data("price")
                 }else{
-                    return $(b).data("price")-$(a).data("price")
+                    if($sortBy == 'price')
+                        return $(b).data("price")-$(a).data("price")
                 }
 
             });
-            curdiv.find('.product-grid-4').html(divList);
-
+            if (typeof curDivId === "undefined") {
+                curdiv.html(divList);
+            }else{
+                curdiv.find('.product-grid-4').html(divList);
+            }
         });
             
+        $('.price-catodgory').find('li').click(function(event){
+            $('#choosedPrice').val('NOT-ALL')
+            $('#priceFrom').val($(this).data('from'));
+            $('#priceTo').val($(this).data('to'));
+            filter();
+        });
 
+        $('.AddWishlist').click(function(evant){
+            $.post( "{% url 'store:add_wishlist' %}",{'productId' : $(this).data('productid'), 'csrfmiddlewaretoken' : "{{ csrf_token }}"}, function( data ) {
+             if(data.Wishlistcount > 0){
+                $(".WishlistcountDiv").show();
+                $(".Wishlistcount").val(data.Wishlistcount);
+             }
+            }, "json");
+        });
+
+    $( "#searchItem" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "{% url 'home:itmeList' %}",
+          dataType: "json",
+          data: {
+            q: request.term
+          },
+          success: function( data ) {
+            response( data );
+          }
+        });
+      },
+      minLength: 1,
+      select: function( event, ui ) {
+          
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
   </script>
   <!-- Cart  JS -->
   <script src="/static/js/cart.js"></script>

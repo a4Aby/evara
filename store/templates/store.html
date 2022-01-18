@@ -16,7 +16,7 @@
                     <div class="col-lg-9">
                         <div class="shop-product-fillter style-2">
                             <div class="totall-product">
-                                <p> We found <strong class="text-brand">688</strong> items for you!</p>
+                                <p> We found <strong class="text-brand">{{items_count}}</strong> items for you!</p>
                             </div>
                             <div class="sort-by-product-area">
                                 <div class="sort-by-cover mr-10">
@@ -49,19 +49,22 @@
                                     </div>
                                     <div class="sort-by-dropdown">
                                         <ul>
-                                            <li><a class="active" href="#">Featured</a></li>
-                                            <li><a href="#">Price: Low to High</a></li>
-                                            <li><a href="#">Price: High to Low</a></li>
-                                            <li><a href="#">Release Date</a></li>
-                                            <li><a href="#">Avg. Rating</a></li>
+                                            <li class="sortby active" data-sortby="featured" data-orderby="asc"><a >Featured</a></li>
+                                            <li class="sortby " data-sortby="price" data-orderby="asc"><a >Price: Low to High</a></li>
+                                            <li class="sortby " data-sortby="price" data-orderby="desc"><a >Price: High to Low</a></li>
+                                            <li class="sortby " data-sortby="release" data-orderby="asc"><a >Release Date</a></li>
+                                            <li class="sortby " data-sortby="rating" data-orderby="asc"><a >Avg. Rating</a></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="product-list mb-50">
+                        <div class="product-list mb-50 productListMain">
                             {% for product in items %}
-                            <div class="product-cart-wrap">
+                            <div class="product-cart-wrap productList" 
+                            data-category="{{ product.prd_parent_category }}"
+                            data-subcategory="{{ product.prd_sub_category_id }}"
+                            data-price="{{ product.prd_price }}">
                                 <div class="product-img-action-wrap">
                                     <div class="product-img product-img-zoom">
                                         <div class="product-img-inner">
@@ -105,7 +108,7 @@
                             {% endfor %}
                         </div>
                         <!--pagination-->
-                        <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
+                        <!-- <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-start">
                                     <li class="page-item active"><a class="page-link" href="#">01</a></li>
@@ -116,24 +119,14 @@
                                     <li class="page-item"><a class="page-link" href="#"><i class="fi-rs-angle-double-small-right"></i></a></li>
                                 </ul>
                             </nav>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-lg-3 primary-sidebar sticky-sidebar">
-                        <div class="widget-category mb-30">
-                            <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
-                            <ul class="categories">
-                                <li><a href="shop-grid-right.html">Shoes & Bags</a></li>
-                                <li><a href="shop-grid-right.html">Blouses & Shirts</a></li>
-                                <li><a href="shop-grid-right.html">Dresses</a></li>
-                                <li><a href="shop-grid-right.html">Swimwear</a></li>
-                                <li><a href="shop-grid-right.html">Beauty</a></li>
-                                <li><a href="shop-grid-right.html">Jewelry & Watch</a></li>
-                                <li><a href="shop-grid-right.html">Accessories</a></li>
-                            </ul>
-                        </div>
+                        {% include "cat.html" %} 
+                        
                         <!-- Fillter By Price -->
                         <div class="sidebar-widget price_range range mb-30">
-                            <div class="widget-header position-relative mb-20 pb-10">
+                            <!-- <div class="widget-header position-relative mb-20 pb-10">
                                 <h5 class="widget-title mb-10">Fill by price</h5>
                                 <div class="bt-1 border-color-1"></div>
                             </div>
@@ -146,7 +139,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
+                            
                             <div class="list-group">
                                 <div class="list-group-item mb-10 mt-10">
                                     <label class="fw-900">Color</label>
@@ -175,7 +169,8 @@
                             </div>
                             <a href="shop-grid-right.html" class="btn btn-sm btn-default"><i class="fi-rs-filter mr-5"></i> Fillter</a>
                         </div>
-                   
+                        
+                        {% include "priceRange.html" %}
                       
                     </div>
                 </div>

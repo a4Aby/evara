@@ -1,3 +1,4 @@
+from http.client import HTTPResponse
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, REDIRECT_FIELD_NAME
 from django.contrib.auth.tokens import default_token_generator
@@ -62,6 +63,7 @@ class LogInView(GuestOnlyView, FormView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
+
         request = self.request
 
         # If the test cookie worked, go ahead and delete it since its no longer needed
@@ -77,6 +79,7 @@ class LogInView(GuestOnlyView, FormView):
         login(request, form.user_cache)
 
         redirect_to = request.POST.get(REDIRECT_FIELD_NAME, request.GET.get(REDIRECT_FIELD_NAME))
+        # return HTTPResponse(redirect_to)
         #url_is_safe = is_safe_url(redirect_to, allowed_hosts=request.get_host(), require_https=request.is_secure())
         
         url_is_safe = True

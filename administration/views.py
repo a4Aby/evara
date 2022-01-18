@@ -3,7 +3,7 @@ from django.http import request
 from django.http import HttpResponse,HttpResponseRedirect
 from django.http.response import JsonResponse
 from django.shortcuts import render,redirect
-from .models import Categories, Products
+from .models import Categories, Products 
 from .forms import CategoryForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect 
 from django.contrib.auth import authenticate
