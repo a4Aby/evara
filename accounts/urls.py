@@ -1,5 +1,7 @@
 from django.urls import path
 
+from administration import views
+
 from .views import (
     LogInView, ResendActivationCodeView, RemindUsernameView, SignUpView, ActivateView, LogOutView,
     ChangeEmailView, ChangeEmailActivateView, ChangeProfileView, ChangePasswordView,
@@ -9,6 +11,8 @@ from .views import (
 app_name = 'accounts'
 
 urlpatterns = [
+    # path('MywishList/', views.MywishList, name='MywishList'),
+
     path('log-in/', LogInView.as_view(), name='log_in'),
     path('log-out/', LogOutView.as_view(), name='log_out'),
 

@@ -3,7 +3,7 @@ from multiprocessing.connection import Connection
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import render
-from administration.models import Categories, Products
+from administration.models import Brand, Categories, Products
 from administration.views import categories
 from datetime import datetime,timedelta
 from django.core import serializers
@@ -27,24 +27,28 @@ def itemList(request):
     
     return JsonResponse(list,safe=False)
     
+def productDetials(request):
+    data = {}
+    return render(request,'productDetialsModel.html',data)
 
 def index(request):
     all_categories = Categories.objects.filter(parent_category=None)
-    all_products = Products.objects.filter()
-    new_arrivals = Products.objects.filter(prd_created_on__gte=datetime.now()-timedelta(days=7) )
+    all_products = Products.objects.filter(proParent_id=None)
+    new_arrivals = Products.objects.filter(proParent_id=None,prd_created_on__gte=datetime.now()-timedelta(days=7) )
     Wishlistcount = 0
     if request.user.is_authenticated :
         customer, created = Customer.objects.get_or_create(user=request.user,defaults={'name': request.user.username,'email':request.user.email})
         Wishlistcount = Wishlist.objects.filter(customer = customer).count()
     
     categories = Categories.objects.all()
-
+    brand = Brand.objects.all()
     content = {
         'parent_category':all_categories,
         'categories':categories,
         'all_products' : all_products,
         'new_arrivals' : new_arrivals,
         'Wishlistcount' : Wishlistcount,
+        'brands':brand,
     }
     # return HttpResponse(all_products)
     # print(all_products)

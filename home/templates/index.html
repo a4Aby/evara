@@ -308,13 +308,13 @@
                                                         </a>
                                                     </div>
                                                     <div class="product-action-1">
-                                                        <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
+                                                        <a aria-label="Quick view" class="action-btn hover-up viewProduct" data-productId={{product.id}} data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
                                                         {% if user.is_authenticated %}
                                                         <a aria-label="Add To Wishlist" class="action-btn hover-up AddWishlist" data-productId={{product.id}} ><i class="fi-rs-heart"></i></a>
                                                         {% else %}
                                                         <a aria-label="Add To Wishlist" class="action-btn hover-up disabled" data-productId={{product.id}} ><i class="fi-rs-heart"></i></a>
                                                         {% endif %}
-                                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                        <!-- <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
                                                     </div>
                                                     <div class="product-badges product-badges-position product-badges-mrg">
                                                         <span class="hot">Hot</span>
@@ -364,13 +364,13 @@
                                                         </a>
                                                     </div>
                                                     <div class="product-action-1">
-                                                        <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
+                                                        <a aria-label="Quick view" class="action-btn hover-up viewProduct" data-productId={{product.id}} ><i class="fi-rs-eye"></i></a>
                                                         {% if user.is_authenticated %}
                                                         <a aria-label="Add To Wishlist" class="action-btn hover-up AddWishlist" data-productId={{product.id}} ><i class="fi-rs-heart"></i></a>
                                                         {% else %}
                                                         <a aria-label="Add To Wishlist" class="action-btn hover-up disabled" data-productId={{product.id}} ><i class="fi-rs-heart"></i></a>
                                                         {% endif %}
-                                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                        <!-- <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
                                                     </div>
                                                     <div class="product-badges product-badges-position product-badges-mrg">
                                                         <span class="hot">Hot</span>
@@ -418,13 +418,13 @@
                                                         </a>
                                                     </div>
                                                     <div class="product-action-1">
-                                                        <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
+                                                        <a aria-label="Quick view" class="action-btn hover-up viewProduct" data-productId={{product.id}} data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
                                                         {% if user.is_authenticated %}
                                                         <a aria-label="Add To Wishlist" class="action-btn hover-up AddWishlist" data-productId={{product.id}} ><i class="fi-rs-heart"></i></a>
                                                         {% else %}
                                                         <a aria-label="Add To Wishlist" class="action-btn hover-up disabled" data-productId={{product.id}} ><i class="fi-rs-heart"></i></a>
                                                         {% endif %}
-                                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                        <!-- <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
                                                     </div>
                                                     <div class="product-badges product-badges-position product-badges-mrg">
                                                         <span class="hot">Hot</span>
@@ -623,27 +623,11 @@
                 <div class="carausel-6-columns-cover position-relative wow fadeIn animated">
                     <div class="slider-arrow slider-arrow-2 carausel-6-columns-arrow" id="carausel-6-columns-3-arrows"></div>
                     <div class="carausel-6-columns text-center" id="carausel-6-columns-3">
+                        {% for brand in brands %}
                         <div class="brand-logo">
-                             <img class="img-grey-hover" src="/static/imgs/banner/brand-3.png" alt="">
+                             <img class="img-grey-hover" src="/media/{{brand.brandLogo}}" alt="">
                         </div>
-                        <div class="brand-logo">
-                             <img class="img-grey-hover" src="/static/imgs/banner/brand-3.png" alt="">
-                        </div>
-                        <div class="brand-logo">
-                            <img class="img-grey-hover" src="/static/imgs/banner/brand-3.png" alt="">
-                        </div>
-                        <div class="brand-logo">
-                             <img class="img-grey-hover" src="/static/imgs/banner/brand-3.png" alt="">
-                        </div>
-                        <div class="brand-logo">
-                             <img class="img-grey-hover" src="/static/imgs/banner/brand-3.png" alt="">
-                        </div>
-                        <div class="brand-logo">
-                             <img class="img-grey-hover" src="/static/imgs/banner/brand-3.png" alt="">
-                        </div>
-                        <div class="brand-logo">
-                             <img class="img-grey-hover" src="/static/imgs/banner/brand-3.png" alt="">
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

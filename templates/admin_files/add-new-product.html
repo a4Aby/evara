@@ -19,6 +19,24 @@
                             <h4>Product Detail</h4>
                         </div>
                         <div class="card-body">
+                                <div class="col-sm-12 mb-3">
+                                    <label class="form-label">Brand</label>
+                                    <select class="form-select" name="prd_brand" id="proParent">
+                                        <option> Select Brand </option>
+                                        {% for brand in brands %}
+                                        <option value="{{ brand.id }}"> {{ brand }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-12 mb-3">
+                                    <label class="form-label">Parent Product</label>
+                                    <select class="form-select" name="proParent" id="proParent">
+                                        <option> Select Parent Product </option>
+                                        {% for product in products %}
+                                        <option value="{{ product.id }}"> {{ product }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product title</label>
                                     <input type="text" placeholder="Type here" class="form-control" id="product_name" name="prd_name">
@@ -26,6 +44,38 @@
                                 <div class="mb-4">
                                     <label class="form-label">Full description</label>
                                     <textarea placeholder="Type here" class="form-control" rows="4" name="prd_description"></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Color</label>
+                                            <div class="row gx-2">
+                                                <input value="#ff0000" type="color" class="form-control" name="prd_color">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Availability</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="1" type="number" min="1" class="form-control" name="prd_availabilityCount">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Size</label>
+                                            <div class="row gx-2">
+                                                <select class="form-select"  name="prd_size">
+                                                    <option value="S">S</option>
+                                                    <option value="M">M</option>
+                                                    <option value="L">L</option>
+                                                    <option value="XL">XL</option>
+                                                    <option value="XXL">XXL</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
@@ -108,6 +158,18 @@
                             </div>
                         </div>
                     </div> <!-- card end// -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Product Images</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-upload">
+                                <img src="assets/imgs/theme/upload.svg" alt="">
+                                <input class="form-control" type="file" multiple name="prd_images">
+                            </div>
+                        </div>
+                    </div> <!-- card end// -->
+
                     <div class="card mb-4">
                         <div class="card-header">
                             <h4>Category Details</h4>

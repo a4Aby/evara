@@ -1,0 +1,233 @@
+{% extends 'admin_files/base.html' %}
+
+{% block content %}
+    <section class="content-main">
+        <form action="/edit-product" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="{{productDet.0.id}}">
+            <div class="row">
+                    {% csrf_token %}
+                <div class="col-12">
+                    <div class="content-header">
+                        <h2 class="content-title">Edit Product</h2>
+                        <div>
+                            <button type="submit" class="btn btn-md rounded font-sm hover-up">Edit</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Product Detail</h4>
+                        </div>
+                        <div class="card-body">
+                                <div class="col-sm-12 mb-3">
+                                    <label class="form-label">Brand</label>
+                                    <select class="form-select" name="prd_brand" id="proParent">
+                                        <option> Select Brand </option>
+                                        {% for brand in brands %}
+                                        <option value="{{ brand.id }}" 
+                                        {% if brand.id|stringformat:"i" == productDet.0.prd_brand  %}
+                                        selected="selected"
+                                        {% endif %}
+                                        > {{ brand }}  </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-12 mb-3">
+                                    <label class="form-label">Parent Product</label>
+                                    <select class="form-select" name="proParent" id="proParent">
+                                        <option> Select Parent Product </option>
+                                        {% for product in products %}
+                                        <option value="{{ product.id }}"
+                                        {% if product.id == productDet.0.proParent_id  %}
+                                        selected="selected"
+                                        {% endif %}
+                                        > {{ product }}  </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Product title</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="product_name"  value="{{productDet.0.prd_name}}" name="prd_name">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Full description</label>
+                                    <textarea placeholder="Type here" class="form-control" rows="4" name="prd_description">{{productDet.0.prd_description}}</textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Color</label>
+                                            <div class="row gx-2">
+                                                <input value="#ff0000" type="color" class="form-control" name="prd_color"value="{{productDet.0.prd_color}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Availability</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="1" type="number" min="1" class="form-control" value="{{productDet.0.prd_availabilityCount}}" name="prd_availabilityCount">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Size</label>
+                                            <div class="row gx-2">
+                                                <select class="form-select"  name="prd_size">
+                                                    {% for siz in size %}
+                                                    <option value="{{siz}}" {% if siz == productDet.0.prd_size %} selected = "selected" {% endif %} >{{siz}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Regular price</label>
+                                            <div class="row gx-2">
+                                                <input placeholder="$" type="text" class="form-control" value="{{productDet.0.prd_price}}" name="prd_price">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">strike price</label>
+                                            <input placeholder="$" type="text" class="form-control" value="{{productDet.0.prd_strike_price}}" name="prd_strike_price">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label class="form-label">Currency</label>
+                                        <select class="form-select"  name="prd_currency" >
+                                            <option select > INR </option>
+                                         
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Tax rate</label>
+                                    
+									<select class="form-select"  name="prd_gst">
+                                        {% for gstv in gst %}
+                                        <option value="{{gstv}}" {% if gstv == productDet.0.prd_gst %} selected = "selected" {% endif %} >{{gstv}}% GST</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <label class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" value="1" {% if productDet.0.prd_cod_available == "1" %} checked {% endif %} name="prd_cod_available">
+                                    <span class="form-check-label"> Cash on delivery </span>
+                                </label>
+                        </div>
+                    </div> <!-- card end// -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Shipping</h4>
+                        </div>
+                        <div class="card-body">
+                            
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-4">
+                                            <label for="product_name" class="form-label">Width</label>
+                                            <input type="text" placeholder="inch" class="form-control" id="product_name" value="{{productDet.0.prd_width}}"name="prd_width">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-4">
+                                            <label for="product_name" class="form-label">Height</label>
+                                            <input type="text" placeholder="inch" class="form-control" value="{{productDet.0.prd_height}}"id="product_name" name="prd_height">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Weight</label>
+                                    <input type="text" placeholder="gam" class="form-control" value="{{productDet.0.prd_weight}}"id="product_name" name="prd_weight">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Shipping fees</label>
+                                    <input type="text" placeholder="$" class="form-control" id="product_name"  value="{{productDet.0.prd_shipping_fee}}"name="prd_shipping_fee">
+                                </div>
+                        </div>
+                    </div> <!-- card end// -->
+                </div>
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Product Image</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-upload">
+                                <img src="assets/imgs/theme/upload.svg" alt="">
+                                <input class="form-control" type="file" name="prd_image">
+                            </div>
+                        </div>
+                    </div> <!-- card end// -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Product Images</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-upload">
+                                <img src="assets/imgs/theme/upload.svg" alt="">
+                                <input class="form-control" type="file" multiple name="prd_images">
+                            </div>
+                        </div>
+                    </div> <!-- card end// -->
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Category Details</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row gx-2">
+                                <div class="col-sm-6 mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" name="prd_parent_category" id="mainCategory">
+                                        <option> Select Main Category </option>
+                                        {% for category in parent_category %}
+                                        <option value="{{ category.id }}" {% if category.id|stringformat:"i" == productDet.0.prd_parent_category  %} selected {% endif %}  > {{ category.cat_name }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 mb-3">
+                                    <label class="form-label">Sub-category</label>
+                                    <select class="form-select" id="sub_category" name="prd_sub_category">
+                                        {% for category in sub_categories %}
+                                            <option value="{{ category.id }}" {% if category.id|stringformat:"i" == productDet.0.prd_sub_category_id  %} selected {% endif %}  > {{ category.cat_name }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Tags</label>
+                                    <input type="text" class="form-control" value="{{productDet.0.prd_tags}}" name="prd_tags">
+                                </div>
+                            </div> <!-- row.// -->
+                        </div>
+                    </div> <!-- card end// -->
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Type</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row gx-2">
+                                <div class="col-sm-6 mb-3">
+                                    <input class="form-check-input" name="is_featured" checked value="1" type="checkbox" aria-label="Checkbox for following text input">
+                                    <label class="form-label">Featured</label>
+                                </div>
+                                <div class="col-sm-6 mb-3">
+                                    <input class="form-check-input" name="is_popular" checked value="1" type="checkbox" aria-label="Checkbox for following text input">
+                                    <label class="form-label">Popular</label>
+                                </div>
+                                
+                            </div> <!-- row.// -->
+                        </div>
+                    </div> <!-- card end// -->
+                </div>
+            </div>
+        </form>
+        </section> <!-- content-main end// -->
+        {% endblock %}

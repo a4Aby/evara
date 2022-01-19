@@ -12,4 +12,5 @@ urlpatterns = [
     path('store/',views.items,name='index'),
     path('about/',views.about,name='about us'),
     path('itemlist/',views.itemList,name='itmeList'),
+    path('productDetials/',views.productDetials,name='productDetials'),
 ]

@@ -17,4 +17,9 @@ urlpatterns = [
     path('get_subcategory',views.get_subcategory,name="get_subcategory"),
     path('order-list',views.orderList,name="orderList"),
     path('wish-list',views.wishList,name="wishList"),
+    path('brand-Master',views.brandMaster,name="brandMaster"),
+    path('add_brand',views.brandAdd,name="add brand from admin"),
+    path('editProduct/<int:prd_id>',views.editProduct,name="edit brand from admin"),
+    path('edit-product',views.updateProduct,name="update brand from admin"),
+    
 ]

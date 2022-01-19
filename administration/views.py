@@ -1,3 +1,5 @@
+from itertools import product
+from pickle import FALSE
 from django.db import connection
 from django.http import request
 from django.http import HttpResponse,HttpResponseRedirect
@@ -5,7 +7,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render,redirect
 
 from store.models import Order, Wishlist
-from .models import Categories, Products 
+from .models import Brand, Categories, ProductImages, Products 
 from .forms import CategoryForm
 from django.views.decorators.csrf import csrf_exempt, csrf_protect 
 from django.contrib.auth import authenticate
@@ -43,6 +45,22 @@ def get_subcategory(request):
     all_categories = Categories.objects.filter(parent_category=request.POST['mainCategory'])
     jsonData = serializers.serialize('json',all_categories)
     return JsonResponse(jsonData,safe=False)
+
+def brandAdd(request):
+
+    AddedBrand = Brand.objects.create(
+                brandName = request.POST['brandName'],
+                brandLogo = request.FILES['brandLogo'],
+            )
+    return redirect('/brand-Master')
+
+def brandMaster(request):
+    brand = Brand.objects.all()
+    data = {
+        'brands' : brand,
+    }
+    return render(request,'admin_files/brandMaster.html', data)
+
 
 @csrf_exempt
 def login(request):
@@ -101,19 +119,24 @@ def delete_categories(request,cat_id):
 @login_required
 def add_new_product(request):
     all_categories = Categories.objects.filter(parent_category=None)
-    
+    parentProducts = Products.objects.filter(proParent=None)
+    brand = Brand.objects.all()
     content = {
         'parent_category':all_categories,
+        'products' : parentProducts,
+        'brands' : brand,
     }
 
     return render(request,'admin_files/add-new-product.html',content)
-
-@login_required
-def insert_product(request):
+def updateProduct(request):
     if request.method == "POST":
 
         prd_sub_category = Categories.objects.get(id=request.POST["prd_sub_category"])
         prd_name = request.POST["prd_name"]
+    
+        if request.POST['proParent']:
+            proParent = Products.objects.get(id=request.POST["proParent"])
+    
         prd_description = request.POST["prd_description"]
         prd_price = request.POST["prd_price"]
         prd_strike_price = request.POST["prd_strike_price"]
@@ -130,11 +153,103 @@ def insert_product(request):
         prd_tags = request.POST["prd_tags"]
         prd_is_featured = request.POST.get("is_featured",'0')
         prd_is_popular = request.POST.get("is_popular",'0')
-
         prd_order =1
         prd_status = 1
-        products_db = Products(prd_is_featured=prd_is_featured,prd_is_popular=prd_is_popular,prd_name=prd_name,prd_description=prd_description,prd_price=prd_price,prd_strike_price=prd_strike_price,prd_gst=prd_gst,prd_cod_available=prd_cod_available,prd_width=prd_width,prd_height=prd_height,prd_weight=prd_weight,prd_shipping_fee=prd_shipping_fee,prd_currency=prd_currency,prd_image=prd_image,prd_parent_category=prd_parent_category,prd_sub_category=prd_sub_category,prd_tags=prd_tags,prd_order=prd_order,prd_status=prd_status)
+        prd_brand = request.POST["prd_brand"]
+        prd_color = request.POST["prd_color"]
+        prd_size = request.POST["prd_size"]
+        prd_availabilityCount = request.POST["prd_availabilityCount"]
+        
+        if request.POST['proParent']:
+            update = Products.objects.filter(id=request.POST['id']).update(
+                prd_brand=prd_brand,prd_color=prd_color,prd_size=prd_size,prd_availabilityCount=prd_availabilityCount,proParent=proParent,prd_is_featured=prd_is_featured,prd_is_popular=prd_is_popular,prd_name=prd_name,prd_description=prd_description,prd_price=prd_price,prd_strike_price=prd_strike_price,prd_gst=prd_gst,prd_cod_available=prd_cod_available,prd_width=prd_width,prd_height=prd_height,prd_weight=prd_weight,prd_shipping_fee=prd_shipping_fee,prd_currency=prd_currency,prd_image=prd_image,prd_parent_category=prd_parent_category,prd_sub_category=prd_sub_category,prd_tags=prd_tags,prd_order=prd_order,prd_status=prd_status
+            )
+        else:
+            update =Products.objects.filter(id=request.POST['id']).update(
+                prd_brand=prd_brand,prd_color=prd_color,prd_size=prd_size,prd_availabilityCount=prd_availabilityCount,prd_is_featured=prd_is_featured,prd_is_popular=prd_is_popular,prd_name=prd_name,prd_description=prd_description,prd_price=prd_price,prd_strike_price=prd_strike_price,prd_gst=prd_gst,prd_cod_available=prd_cod_available,prd_width=prd_width,prd_height=prd_height,prd_weight=prd_weight,prd_shipping_fee=prd_shipping_fee,prd_currency=prd_currency,prd_image=prd_image,prd_parent_category=prd_parent_category,prd_sub_category=prd_sub_category,prd_tags=prd_tags,prd_order=prd_order,prd_status=prd_status
+            )
+
+        products_db = Products.objects.get(id=request.POST['id'])
+        prd_images = request.FILES.getlist("prd_images")
+        
+        for image in prd_images:
+            Addedimage = ProductImages.objects.create(
+                product = products_db,
+                image = image,
+            )
+
+
+    return redirect("/product-list/")
+
+
+def editProduct(request,prd_id):
+    product = Products.objects.filter(id = prd_id)
+    print(product.query)
+    all_categories = Categories.objects.filter(parent_category=None)
+    sub_categories = Categories.objects.filter(parent_category__isnull=False)
+    parentProducts = Products.objects.filter(proParent=None)
+    brand = Brand.objects.all()
+    content = {
+        'parent_category':all_categories,
+        'products' : parentProducts,
+        'brands' : brand,
+        'productDet' : product,
+        'size' : {"S","M","L","XL","XXL"},
+        'gst' : {"5","10","18"},
+        'sub_categories' : sub_categories,
+    }
+    return render(request,'admin_files/edit-product.html',content)
+
+
+@login_required
+def insert_product(request):
+    if request.method == "POST":
+
+        prd_sub_category = Categories.objects.get(id=request.POST["prd_sub_category"])
+        prd_name = request.POST["prd_name"]
+    
+        if request.POST['proParent']:
+            proParent = Products.objects.get(id=request.POST["proParent"])
+    
+        prd_description = request.POST["prd_description"]
+        prd_price = request.POST["prd_price"]
+        prd_strike_price = request.POST["prd_strike_price"]
+        prd_currency = request.POST["prd_currency"]
+        prd_gst = request.POST["prd_gst"]
+        prd_cod_available = request.POST["prd_cod_available"]
+        prd_width = request.POST["prd_width"]
+        prd_height = request.POST["prd_height"]
+        prd_weight = request.POST["prd_weight"]
+        prd_shipping_fee = request.POST["prd_shipping_fee"]
+        prd_image = request.FILES["prd_image"]
+        prd_parent_category = request.POST["prd_parent_category"]
+        prd_sub_category = prd_sub_category
+        prd_tags = request.POST["prd_tags"]
+        prd_is_featured = request.POST.get("is_featured",'0')
+        prd_is_popular = request.POST.get("is_popular",'0')
+        prd_order =1
+        prd_status = 1
+        prd_brand = request.POST["prd_brand"]
+        prd_color = request.POST["prd_color"]
+        prd_size = request.POST["prd_size"]
+        prd_availabilityCount = request.POST["prd_availabilityCount"]
+        
+        if request.POST['proParent']:
+            products_db = Products(prd_brand=prd_brand,prd_color=prd_color,prd_size=prd_size,prd_availabilityCount=prd_availabilityCount,proParent=proParent,prd_is_featured=prd_is_featured,prd_is_popular=prd_is_popular,prd_name=prd_name,prd_description=prd_description,prd_price=prd_price,prd_strike_price=prd_strike_price,prd_gst=prd_gst,prd_cod_available=prd_cod_available,prd_width=prd_width,prd_height=prd_height,prd_weight=prd_weight,prd_shipping_fee=prd_shipping_fee,prd_currency=prd_currency,prd_image=prd_image,prd_parent_category=prd_parent_category,prd_sub_category=prd_sub_category,prd_tags=prd_tags,prd_order=prd_order,prd_status=prd_status)
+        else:
+            products_db = Products(prd_brand=prd_brand,prd_color=prd_color,prd_size=prd_size,prd_availabilityCount=prd_availabilityCount,prd_is_featured=prd_is_featured,prd_is_popular=prd_is_popular,prd_name=prd_name,prd_description=prd_description,prd_price=prd_price,prd_strike_price=prd_strike_price,prd_gst=prd_gst,prd_cod_available=prd_cod_available,prd_width=prd_width,prd_height=prd_height,prd_weight=prd_weight,prd_shipping_fee=prd_shipping_fee,prd_currency=prd_currency,prd_image=prd_image,prd_parent_category=prd_parent_category,prd_sub_category=prd_sub_category,prd_tags=prd_tags,prd_order=prd_order,prd_status=prd_status)
+
         products_db.save()
+
+        prd_images = request.FILES.getlist("prd_images")
+        
+        for image in prd_images:
+            Addedimage = ProductImages.objects.create(
+                product = products_db,
+                image = image,
+            )
+
+
     return redirect("/product-list/")
 
 @login_required

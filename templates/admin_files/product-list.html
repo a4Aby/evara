@@ -71,7 +71,7 @@
             <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>{{ row.prd_parent_category }}/{{ row.prd_sub_category }}</span> </div>
             <div class="col-lg-1 col-sm-2 col-4 col-status"> <span class="badge rounded-pill alert-success">Active</span> </div>
             <div class="col-lg-2 col-sm-2 col-4 col-date"> <span>{{ row.prd_created_on }}</span> </div>
-            <div class="col-lg-2 col-sm-2 col-4 col-action text-end"> <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a> <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> Delete </a> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-action text-end"> <a href="/editProduct/{{row.id}}" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a> <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> Delete </a> </div>
           </div>
           <!-- row .// --> 
         </article>

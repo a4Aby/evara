@@ -1,3 +1,4 @@
+from email.mime import image
 from django.db import models
 from django.db.models.fields import NullBooleanField
 
@@ -15,9 +16,16 @@ class Categories(models.Model):
 
     def __str__(self):
         return self.cat_name
-
-
+class Brand(models.Model):
+    brandName = models.CharField(max_length=100,default='')
+    brandLogo = models.ImageField(null=True,blank=True, upload_to='uploads/')
+    status = models.IntegerField(default=1)
+    def __str__(self):
+        return self.brandName
+        
 class Products(models.Model):
+    proParent = models.ForeignKey(Brand,on_delete=models.CASCADE,blank=True,null=True)
+    proParent = models.ForeignKey('self',related_name='children',on_delete=models.CASCADE,blank=True,null=True)
     prd_name = models.CharField(max_length=255,default='')
     prd_description = models.TextField(default='')
     prd_price = models.FloatField(default=0)
@@ -39,6 +47,17 @@ class Products(models.Model):
     prd_created_on = models.DateField(auto_now_add=True)
     prd_is_featured = models.CharField(max_length=10,default='0')
     prd_is_popular = models.CharField(max_length=10,default='0')
+    prd_brand = models.CharField(max_length=100,default='')
+    prd_reviewsCount = models.IntegerField(default=0)
+    prd_oferPercentage = models.FloatField(max_length=10,default=0)
+    prd_color = models.CharField(max_length=100,default='')
+    prd_size = models.CharField(max_length=100,default='')
+    prd_availabilityCount = models.IntegerField(default=1)
+
 
     def __str__(self):
         return self.prd_name
+
+class ProductImages(models.Model):
+    product = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
+    image = models.ImageField(null=True,blank=True, upload_to='uploads/')
