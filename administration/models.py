@@ -1,6 +1,10 @@
 from email.mime import image
+from itertools import product
+from re import T
+from unicodedata import name
 from django.db import models
 from django.db.models.fields import NullBooleanField
+from django.utils.safestring import mark_safe
 
 # Create your models here.
 class Categories(models.Model):
@@ -22,9 +26,20 @@ class Brand(models.Model):
     status = models.IntegerField(default=1)
     def __str__(self):
         return self.brandName
-        
+class Color(models.Model):
+    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=100,blank=True,null=True)
+    def __str__(self):
+        return self.name
+    def color_tag(self):
+        if self.code is not None:
+            return mark_safe('<input type="color" disabled value="{}" ></input>'.format(self.code))
+
+class Size(models.Model):
+    name = models.CharField(max_length=50)
+    def __str__(self):
+        return self.name
 class Products(models.Model):
-    proParent = models.ForeignKey(Brand,on_delete=models.CASCADE,blank=True,null=True)
     proParent = models.ForeignKey('self',related_name='children',on_delete=models.CASCADE,blank=True,null=True)
     prd_name = models.CharField(max_length=255,default='')
     prd_description = models.TextField(default='')
@@ -50,14 +65,29 @@ class Products(models.Model):
     prd_brand = models.CharField(max_length=100,default='')
     prd_reviewsCount = models.IntegerField(default=0)
     prd_oferPercentage = models.FloatField(max_length=10,default=0)
-    prd_color = models.CharField(max_length=100,default='')
-    prd_size = models.CharField(max_length=100,default='')
-    prd_availabilityCount = models.IntegerField(default=1)
-
-
+    prd_color = models.CharField(max_length=100,default='', null=True)
+    prd_size = models.CharField(max_length=100,default='', null=True)
+    prd_availabilityCount = models.IntegerField(default=1, null=True)
+    prd_BrandTable = models.ForeignKey(Brand,on_delete=models.CASCADE,blank=True,null=True)
+    prd_sizeTable = models.ForeignKey(Size,on_delete=models.SET_NULL, null=True)
+    prd_colorTable = models.ForeignKey(Color,on_delete=models.SET_NULL, null=True)
+    
     def __str__(self):
         return self.prd_name
 
 class ProductImages(models.Model):
     product = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
     image = models.ImageField(null=True,blank=True, upload_to='uploads/')
+
+class Variants(models.Model):
+    product = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
+    price = models.IntegerField(default=0)
+    strike_price = models.IntegerField(default=0)
+    gst = models.CharField(max_length=100,default='')
+    currency = models.CharField(max_length=100,default='')
+    width = models.CharField(max_length=100,default='')
+    height = models.CharField(max_length=100,default='')
+    weight = models.CharField(max_length=100,default='')
+    shipping_fee = models.CharField(max_length=100,default='')
+    sizeTable = models.ForeignKey(Size,on_delete=models.SET_NULL, null=True)
+    availabilityCount = models.CharField(max_length=100,default='')

@@ -294,7 +294,7 @@
                                     {% for product in all_products %}
                                         {% if product.prd_is_featured %}
                                         <div class="col-lg-4 col-md-4 col-12 col-sm-6 productList" 
-                                        category="{{ product.prd_parent_category }}"
+                                        data-category="{{ product.prd_parent_category }}"
                                         data-subcategory="{{ product.prd_sub_category_id }}"
                                         data-price="{{ product.prd_price }}"
 
@@ -351,7 +351,7 @@
                                     {% for product in all_products %}
                                         {% if product.prd_is_popular %}
                                         <div class="col-lg-4 col-md-4 col-12 col-sm-6 productList"
-                                        category="{{ product.prd_parent_category }}"
+                                        data-category="{{ product.prd_parent_category }}"
                                         data-subcategory="{{ product.prd_sub_category_id }}"
                                         data-price="{{ product.prd_price }}"
                                         >
@@ -364,7 +364,9 @@
                                                         </a>
                                                     </div>
                                                     <div class="product-action-1">
-                                                        <a aria-label="Quick view" class="action-btn hover-up viewProduct" data-productId={{product.id}} ><i class="fi-rs-eye"></i></a>
+                                                        <a aria-label="Quick view" class="action-btn small hover-up viewProduct" data-productId={{product.id}} data-bs-toggle="modal" data-bs-target="#quickViewModal" tabindex="0">
+                                                            <i class="fi-rs-eye"></i></a>
+                                                        <!-- <a aria-label="Quick view" class="action-btn hover-up viewProduct" data-productId={{product.id}} ><i class="fi-rs-eye"></i></a> -->
                                                         {% if user.is_authenticated %}
                                                         <a aria-label="Add To Wishlist" class="action-btn hover-up AddWishlist" data-productId={{product.id}} ><i class="fi-rs-heart"></i></a>
                                                         {% else %}
@@ -406,7 +408,7 @@
                                 <div class="row product-grid-4">
                                     {% for product in all_products %}
                                         <div class="col-lg-4 col-md-4 col-12 col-sm-6 productList"
-                                        category="{{ product.prd_parent_category }}"
+                                        data-category="{{ product.prd_parent_category }}"
                                         data-subcategory="{{ product.prd_sub_category_id }}"
                                         data-price="{{ product.prd_price }}" >
                                             <div class="product-cart-wrap mb-30">

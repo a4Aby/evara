@@ -15,13 +15,17 @@
     <link rel="shortcut icon" type="image/x-icon" href="/static/admin/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="/static/admin/css/main.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
 </head>
 
 <body>
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
-            <a href="index.html" class="brand-wrap">
+            <a href="/administration" class="brand-wrap">
                 <img src="/static/admin/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
             </a>
             <div>
@@ -30,10 +34,12 @@
         </div>
   <nav>
     <ul class="menu-aside">
-      <li class="menu-item "> <a class="menu-link" href="index.html"> <i class="icon material-icons md-shopping_bag"></i> <span class="text">Home</span> </a> </li>
+      <li class="menu-item "> <a class="menu-link" href="/administration"> <i class="icon material-icons md-shopping_bag"></i> <span class="text">Home</span> </a> </li>
       <li class="menu-item"> <a class="menu-link" href="/product-list/"> <i class="icon material-icons md-shopping_bag"></i> <span class="text">Product List</span> </a> </li>
-      <li class="menu-item active"> <a class="menu-link" href="/brand-Master"> <i class="icon material-icons md-category"></i> <span class="text">Brand Master</span> </a> </li>
-      <li class="menu-item active"> <a class="menu-link" href="/administration/categories/"> <i class="icon material-icons md-category"></i> <span class="text">Categories List</span> </a> </li>
+      <li class="menu-item "> <a class="menu-link" href="/brand-Master"> <i class="icon material-icons md-category"></i> <span class="text">Brand Master</span> </a> </li>
+      <li class="menu-item "> <a class="menu-link" href="/size-Master"> <i class="icon material-icons md-category"></i> <span class="text">Size Master</span> </a> </li>
+      <li class="menu-item "> <a class="menu-link" href="/color-Master"> <i class="icon material-icons md-category"></i> <span class="text">Color Master</span> </a> </li>
+      <li class="menu-item "> <a class="menu-link" href="/administration/categories/"> <i class="icon material-icons md-category"></i> <span class="text">Categories List</span> </a> </li>
       <li class="menu-item "> <a class="menu-link" href="/add-new-product"> <i class="icon material-icons md-add_box"></i> <span class="text">Add products</span> </a> </li>
       <li class="menu-item"> <a class="menu-link" href="/order-list"> <i class="icon material-icons md-shopping_cart"></i> <span class="text">Order list</span> </a></li>
       <li class="menu-item"> <a class="menu-link" href="/wish-list"> <i class="icon material-icons md-shopping_cart"></i> <span class="text">Wish list</span> </a></li>
@@ -128,6 +134,31 @@
         });
 
     });
+    
+    $('#proParent').change(function(e){
+        if($(this).val() == ''){
+            $('.only-child').hide();
+            $('.only-parent').show();
+        }else{
+            $('.only-parent').hide();
+            $('.only-child').show();
+        }
+    });
+
+    function showveriants(parant,counter){
+        $.ajax({
+        url: "{% url 'administration:showVariants' %}",
+        data: {
+          'parant': parant
+        },
+        dataType: 'html',
+        success: function (data) {
+            $('#multiCollapseExample'+counter).find('.card-body').html(data);
+        },
+        
+      });
+    
+    }
 </script>
 </body>
 

@@ -13,4 +13,6 @@ urlpatterns = [
     path('about/',views.about,name='about us'),
     path('itemlist/',views.itemList,name='itmeList'),
     path('productDetials/',views.productDetials,name='productDetials'),
+    path('childproductDetials/',views.childproductDetials,name='childproductDetials'),
+    path('productVariants/',views.productVariants,name='productVariants'),
 ]

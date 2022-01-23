@@ -1,9 +1,10 @@
+from itertools import product
 import json
 from multiprocessing.connection import Connection
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import render
-from administration.models import Brand, Categories, Products
+from administration.models import Brand, Categories, Color, Products, Size
 from administration.views import categories
 from datetime import datetime,timedelta
 from django.core import serializers
@@ -26,10 +27,61 @@ def itemList(request):
         list.append('No Data Found')
     
     return JsonResponse(list,safe=False)
+def productVariants(request):
+    product = Products.objects.filter(id = request.POST['productId'])
+    childProduct = Products.objects.filter(proParent_id = request.POST['parent'],prd_sizeTable_id =request.POST['size'],prd_colorTable_id =request.POST['color'] )
     
-def productDetials(request):
-    data = {}
+    availableColorids = childProduct.values_list('prd_colorTable_id', flat=True).distinct()
+    availableColor = Color.objects.filter(id__in=availableColorids)
+
+    availableSizeids = childProduct.values_list('prd_sizeTable_id', flat=True).distinct()
+    availableSize = Size.objects.filter(id__in=availableSizeids)
+    
+    data = {
+        'productDet' : product,
+        'childProduct' : childProduct,
+        'size' : availableSize,
+        'color' : availableColor,
+    }
     return render(request,'productDetialsModel.html',data)
+    return JsonResponse(data,safe=False)   
+def productDetials(request):
+
+    product = Products.objects.filter(id = request.POST['productId'])
+    # childProduct = Products.objects.filter(proParent_id = request.POST['productId']) | Products.objects.filter(id = request.POST['productId'])
+    childProduct = Products.objects.filter(proParent_id = request.POST['productId'])
+    availableSizeids = childProduct.values_list('prd_sizeTable_id', flat=True).distinct()
+    availableSize = Size.objects.filter(id__in=availableSizeids)
+    availableColorids = childProduct.values_list('prd_colorTable_id', flat=True).distinct()
+    availableColor = Color.objects.filter(id__in=availableColorids)
+
+    data = {
+        'productDet' : product,
+        'childProduct' : childProduct,
+        'size' : availableSize,
+        'color' : availableColor,
+    }
+    return render(request,'productDetialsModel.html',data)
+
+def childproductDetials(request):
+    product = Products.objects.filter(id = request.POST['productId'])
+    currentProduct = Products.objects.get(id = request.POST['productId'])
+
+    if currentProduct.proParent_id is None:
+        childProduct = Products.objects.filter(proParent_id = request.POST['productId']) | Products.objects.filter(id = request.POST['productId'])
+    else:
+        childProduct = Products.objects.filter(proParent_id = currentProduct.proParent_id) | Products.objects.filter(id = currentProduct.proParent_id)
+    
+    availableSize = childProduct.values_list('prd_size', flat=True).distinct()
+    print(currentProduct.id)
+    data = {
+        'productDet' : product,
+        'childProduct' : childProduct,
+        'size' : {"S","M","L","XL","XXL"},
+        'availableSize' :availableSize,
+    }
+    return render(request,'productDetialsModel.html',data)
+
 
 def index(request):
     all_categories = Categories.objects.filter(parent_category=None)

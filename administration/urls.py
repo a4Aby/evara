@@ -21,5 +21,12 @@ urlpatterns = [
     path('add_brand',views.brandAdd,name="add brand from admin"),
     path('editProduct/<int:prd_id>',views.editProduct,name="edit brand from admin"),
     path('edit-product',views.updateProduct,name="update brand from admin"),
-    
+    path('color-Master',views.colorMaster,name="colorMaster"),
+    path('add_color',views.colorAdd,name="add color from admin"),
+    path('size-Master',views.sizeMaster,name="sizeMaster"),
+    path('add_size',views.sizeAdd,name="add brand from admin"),
+    path('delete-size/<int:id>',views.sizeDelete,name="delete size"),
+    path('showVariants',views.showVariants,name='showVariants'),
+    path('add-variant/<int:parant>',views.addVariants,name="showVariants"),
+    path('insertVariants',views.insertVariants,name="insertVariants")
 ]

@@ -10,7 +10,7 @@ from .utils import *
 # Create your views here.
 
 def items(request,cat_id):
-    product_list = Products.objects.filter(prd_sub_category = cat_id)
+    product_list = Products.objects.filter(prd_sub_category = cat_id, proParent_id=None)
     #customer = request.user.customer
     data = cartData(request)
     cartTotal = data['cartItems']
