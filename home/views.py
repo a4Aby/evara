@@ -1,10 +1,11 @@
 from itertools import product
 import json
 from multiprocessing.connection import Connection
+from statistics import variance
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import render
-from administration.models import Brand, Categories, Color, Products, Size
+from administration.models import Brand, Categories, Color, Products, Size, Variants
 from administration.views import categories
 from datetime import datetime,timedelta
 from django.core import serializers
@@ -27,39 +28,48 @@ def itemList(request):
         list.append('No Data Found')
     
     return JsonResponse(list,safe=False)
-def productVariants(request):
-    product = Products.objects.filter(id = request.POST['productId'])
-    childProduct = Products.objects.filter(proParent_id = request.POST['parent'],prd_sizeTable_id =request.POST['size'],prd_colorTable_id =request.POST['color'] )
+def chooseColor(request):
+    choosedchildProduct = Products.objects.get(id = request.POST['childProduct'])
+    childProduct = Products.objects.filter(proParent_id = choosedchildProduct.proParent_id)
     
-    availableColorids = childProduct.values_list('prd_colorTable_id', flat=True).distinct()
-    availableColor = Color.objects.filter(id__in=availableColorids)
-
-    availableSizeids = childProduct.values_list('prd_sizeTable_id', flat=True).distinct()
-    availableSize = Size.objects.filter(id__in=availableSizeids)
+    # lowestVariant = Variants.objects.raw('SELECT * FROM administration_variants WHERE product_id = '+request.POST['childProduct']+' ORDER BY price ASC LIMIT 1')
+    ChildVariant = Variants.objects.filter(product = choosedchildProduct.id)
     
     data = {
-        'productDet' : product,
+        'productDet' : choosedchildProduct,
         'childProduct' : childProduct,
-        'size' : availableSize,
-        'color' : availableColor,
+        'lowestChildVariant' : ChildVariant,
     }
     return render(request,'productDetialsModel.html',data)
-    return JsonResponse(data,safe=False)   
-def productDetials(request):
+def chooseVariant(request):
+    variant = Variants.objects.filter(id = request.POST['variant_id'])
+    for variantval in variant:
+        # print(variantval.offerPercentage)
+        jsonData = {
+            'price' : variantval.price,
+            'strike_price' : variantval.strike_price,
+            'gst' : variantval.gst,
+            'currency' : variantval.currency,
+            'width' : variantval.width,
+            'height' : variantval.height,
+            'weight' : variantval.weight,
+            'shipping_fee' : variantval.shipping_fee,
+            'availabilityCount' : variantval.availabilityCount,
+            # 'offerPercentage' : variantval.offerPercentage,
+        }
+    return JsonResponse(jsonData,safe=False)
 
-    product = Products.objects.filter(id = request.POST['productId'])
-    # childProduct = Products.objects.filter(proParent_id = request.POST['productId']) | Products.objects.filter(id = request.POST['productId'])
+def productDetials(request):
     childProduct = Products.objects.filter(proParent_id = request.POST['productId'])
-    availableSizeids = childProduct.values_list('prd_sizeTable_id', flat=True).distinct()
-    availableSize = Size.objects.filter(id__in=availableSizeids)
-    availableColorids = childProduct.values_list('prd_colorTable_id', flat=True).distinct()
-    availableColor = Color.objects.filter(id__in=availableColorids)
+    lowestChild = Products.objects.raw('select * from administration_products where prd_price > 0 and proParent_id = %s order by prd_price asc limit 1',[request.POST['productId']])
+    for child in lowestChild:
+        lowestChildVariant = Variants.objects.filter(product = child.id)
+        product = Products.objects.get(id = child.id)
 
     data = {
         'productDet' : product,
         'childProduct' : childProduct,
-        'size' : availableSize,
-        'color' : availableColor,
+        'lowestChildVariant' : lowestChildVariant,
     }
     return render(request,'productDetialsModel.html',data)
 

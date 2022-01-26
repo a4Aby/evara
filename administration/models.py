@@ -74,6 +74,8 @@ class Products(models.Model):
     
     def __str__(self):
         return self.prd_name
+    def offerPercentage(self):
+        return (self.prd_price/self.prd_strike_price)*100
 
 class ProductImages(models.Model):
     product = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
@@ -91,3 +93,6 @@ class Variants(models.Model):
     shipping_fee = models.CharField(max_length=100,default='')
     sizeTable = models.ForeignKey(Size,on_delete=models.SET_NULL, null=True)
     availabilityCount = models.CharField(max_length=100,default='')
+
+    def offerPercentage(self):
+        return (self.price/self.strike_price)*100

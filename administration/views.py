@@ -24,6 +24,7 @@ def insertVariants(request):
 
     product = Products.objects.get(id = request.POST['prd_id'])
     parant = Products.objects.get(id = product.proParent_id)
+    
 
     price = request.POST["prd_price"]
     strike_price = request.POST["prd_strike_price"]
@@ -47,7 +48,6 @@ def insertVariants(request):
         )
     
     lowestVariant = Variants.objects.raw('SELECT * FROM administration_variants WHERE product_id = '+request.POST['prd_id']+' ORDER BY price ASC LIMIT 1')
-    print(lowestVariant)
     for course in lowestVariant:
         prd_price = course.price
         prd_strike_price = course.strike_price
@@ -61,14 +61,32 @@ def insertVariants(request):
         prd_availabilityCount = course.availabilityCount
         prd_sizeTable = Size.objects.get(name=course.sizeTable)
     
-        Products.objects.filter(id=parant.id).update(prd_price=prd_price,prd_strike_price=prd_strike_price,prd_gst=prd_gst,
+        Products.objects.filter(id=request.POST['prd_id']).update(prd_price=prd_price,prd_strike_price=prd_strike_price,prd_gst=prd_gst,
             prd_currency=prd_currency,prd_width=prd_width,prd_height=prd_height,
             prd_weight=prd_weight,prd_shipping_fee=prd_shipping_fee,prd_size=prd_size,
             prd_availabilityCount=prd_availabilityCount,prd_sizeTable=prd_sizeTable,
         )
 
-        
-        
+    lowestChild = Products.objects.raw('select * from administration_products where prd_price > 0 and proParent_id = %s order by prd_price asc limit 1',[product.proParent_id])
+    for course in lowestChild:
+        prd_price = course.prd_price
+        prd_strike_price = course.prd_strike_price
+        prd_gst = course.prd_gst
+        prd_currency = course.prd_currency
+        prd_width = course.prd_width
+        prd_height = course.prd_height
+        prd_weight = course.prd_weight
+        prd_shipping_fee = course.prd_shipping_fee
+        prd_size = course.prd_sizeTable.name
+        prd_availabilityCount = course.prd_availabilityCount
+        prd_sizeTable = Size.objects.get(name=course.prd_sizeTable)
+    
+        Products.objects.filter(id=product.proParent_id).update(prd_price=prd_price,prd_strike_price=prd_strike_price,prd_gst=prd_gst,
+            prd_currency=prd_currency,prd_width=prd_width,prd_height=prd_height,
+            prd_weight=prd_weight,prd_shipping_fee=prd_shipping_fee,prd_size=prd_size,
+            prd_availabilityCount=prd_availabilityCount,prd_sizeTable=prd_sizeTable,
+        )
+
     return redirect("/add-variant/"+request.POST['prd_id'])
 
 def addVariants(request,parant):
@@ -323,7 +341,6 @@ def editProduct(request,prd_id):
 @login_required
 def insert_product(request):
     if request.method == "POST":
-
         prd_description = request.POST["prd_description"]
         prd_image = request.FILES["prd_image"]
         prd_order =1
@@ -339,9 +356,11 @@ def insert_product(request):
             prd_tags = request.POST["prd_tags"]
             prd_is_featured = request.POST.get("is_featured",'0')
             prd_is_popular = request.POST.get("is_popular",'0')
-
-            products_db = Products(prd_BrandTable=prd_BrandTable,prd_brand=prd_brand,prd_is_featured=prd_is_featured,prd_is_popular=prd_is_popular,prd_name=prd_name,prd_description=prd_description,prd_image=prd_image,prd_parent_category=prd_parent_category,prd_sub_category=prd_sub_category,prd_tags=prd_tags,prd_order=prd_order,prd_status=prd_status)
+            checkP = Products.objects.filter(prd_name = prd_name, prd_parent_category= prd_parent_category, prd_BrandTable= prd_BrandTable,prd_sub_category= prd_sub_category).count()
+            if checkP == 0: 
+                products_db = Products(prd_BrandTable=prd_BrandTable,prd_brand=prd_brand,prd_is_featured=prd_is_featured,prd_is_popular=prd_is_popular,prd_name=prd_name,prd_description=prd_description,prd_image=prd_image,prd_parent_category=prd_parent_category,prd_sub_category=prd_sub_category,prd_tags=prd_tags,prd_order=prd_order,prd_status=prd_status)
         else:
+
             proParent = Products.objects.get(id=request.POST["proParent"])
             prd_name = proParent.prd_name
             prd_parent_category = proParent.prd_parent_category
@@ -355,30 +374,22 @@ def insert_product(request):
             else:
                 prd_cod_available = 0
 
-            # prd_price = request.POST["prd_price"]
-            # prd_strike_price = request.POST["prd_strike_price"]
-            # prd_gst = request.POST["prd_gst"]
-            # prd_currency = request.POST["prd_currency"]
-            # prd_width = request.POST["prd_width"]
-            # prd_height = request.POST["prd_height"]
-            # prd_weight = request.POST["prd_weight"]
-            # prd_shipping_fee = request.POST["prd_shipping_fee"]
             prd_color = request.POST["prd_color"]
-            # prd_size = request.POST["prd_size"]
-            # prd_availabilityCount = request.POST["prd_availabilityCount"]
-            # prd_sizeTable = Size.objects.get(name=request.POST["prd_size"])
             prd_colorTable = Color.objects.get(name=request.POST["prd_color"])
-            products_db = Products(proParent=proParent,prd_colorTable=prd_colorTable,prd_BrandTable=prd_BrandTable,prd_brand=prd_brand,prd_color=prd_color,prd_is_featured=prd_is_featured,prd_is_popular=prd_is_popular,prd_name=prd_name,prd_description=prd_description,prd_cod_available=prd_cod_available,prd_image=prd_image,prd_parent_category=prd_parent_category,prd_sub_category=prd_sub_category,prd_tags=prd_tags,prd_order=prd_order,prd_status=prd_status)
+            checkP = Products.objects.filter(proParent=proParent,prd_color=prd_color).count()
+            if checkP == 0:
+                products_db = Products(proParent=proParent,prd_colorTable=prd_colorTable,prd_BrandTable=prd_BrandTable,prd_brand=prd_brand,prd_color=prd_color,prd_is_featured=prd_is_featured,prd_is_popular=prd_is_popular,prd_name=prd_name,prd_description=prd_description,prd_cod_available=prd_cod_available,prd_image=prd_image,prd_parent_category=prd_parent_category,prd_sub_category=prd_sub_category,prd_tags=prd_tags,prd_order=prd_order,prd_status=prd_status)
         
-        products_db.save()
-        if request.POST['proParent']:
-            prd_images = request.FILES.getlist("prd_images")
-            
-            for image in prd_images:
-                Addedimage = ProductImages.objects.create(
-                    product = products_db,
-                    image = image,
-                )
+        if checkP == 0:
+            products_db.save()
+            if request.POST['proParent']:
+                prd_images = request.FILES.getlist("prd_images")
+                
+                for image in prd_images:
+                    Addedimage = ProductImages.objects.create(
+                        product = products_db,
+                        image = image,
+                    )
     return redirect("/product-list/")
 
 @login_required

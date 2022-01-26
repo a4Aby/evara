@@ -50,69 +50,72 @@
                     </div>
                     <div class="col-md-6 col-sm-12 col-xs-12">
                         <div class="detail-info">
-                            <h3 class="title-detail mt-30">{{productDet.0.prd_name}}</h3>
+                            <h3 class="title-detail mt-30">{{productDet.prd_name}}</h3>
                             <div class="product-detail-rating">
                                 <div class="pro-details-brand">
-                                    <span> Brands: <a href="#">{{productDet.0.prd_BrandTable.brandName}}</a></span>
+                                    <span> Brands: <a href="#">{{productDet.prd_BrandTable.brandName}}</a></span>
                                 </div>
                                 <div class="product-rate-cover text-end">
                                     <div class="product-rate d-inline-block">
                                         <div class="product-rating" style="width:90%">
                                         </div>
                                     </div>
-                                    {% if productDet.0.prd_reviewsCount > 0 %}
-                                    <span class="font-small ml-5 text-muted"> ({{productDet.0.prd_reviewsCount}} reviews)</span>
+                                    {% if productDet.prd_reviewsCount > 0 %}
+                                    <span class="font-small ml-5 text-muted"> ({{productDet.prd_reviewsCount}} reviews)</span>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="clearfix product-price-cover">
                                 <div class="product-price primary-color float-left">
-                                    <ins><span class="text-brand">&#8377;{{childProduct.0.prd_price}}</span></ins>
-                                    {% if childProduct.0.prd_strike_price > childProduct.0.prd_price %}
-                                    <ins><span class="old-price font-md ml-15">&#8377;{{childProduct.0.prd_strike_price}}</span></ins>
-                                    <span class="save-price  font-md color3 ml-15">{{childProduct.0.prd_oferPercentage}}% Off</span>
-                                    {% endif %}
+                                    <ins><span class="text-brand" id="prd_price">&#8377;{{productDet.prd_price}}</span></ins>
+                                    <!-- {% if productDet.prd_strike_price > productDet.prd_price %} -->
+                                    <ins><span class="old-price font-md ml-15" id="prd_strike_price">&#8377;{{productDet.prd_strike_price}}</span></ins>
+                                    <span class="save-price  font-md color3 ml-15" id="prd_oferPercentage">{{productDet.offerPercentage}}% Off</span>
+                                    <!-- {% endif %} -->
                                 </div>
                             </div>
                             <div class="bt-1 border-color-1 mt-15 mb-15"></div>
                             <div class="short-desc mb-30">
-                                <p class="font-sm">{{productDet.0.prd_description}}</p>
+                                <p class="font-sm">{{productDet.prd_description}}</p>
                             </div>
                             
                             <div class="attr-detail attr-color mb-15">
                                 <strong class="mr-10">Color</strong>
                                 <ul class="list-filter color-filter">
-                                    <!-- <li class="colorChoose"  data-color="{{productDet.0.prd_color}}" ><a ><span class="product-color" style="background: {{ productDet.0.prd_color}}"></span></a></li> -->
-                                    {% for cprd in color %}
-                                        <li class="colorChoose" onclick="choosecolor('{{productDet.0.id}}','{{cprd.id}}')" data-productId="{{cprd.id}}" ><a  data-color="{{cprd.name}}"><span class="product-color" style="background:{{cprd.code}}"></span></a></li>
+                                    {% for cprd in childProduct %}
+                                        <li class="colorChoose" onclick="choosecolor('{{cprd.id}}')" data-productId="{{cprd.id}}" ><a  data-color="{{cprd.prd_colorTable.name}}"><span class="product-color" style="background:{{cprd.prd_colorTable.code}}"></span></a></li>
                                     {% endfor %}
                                 </ul>
                             </div>
                             <div class="attr-detail attr-size">
                                 <strong class="mr-10">Size</strong>
                                 <ul class="list-filter size-filter font-small">
-                                    {% for sz in size %}
-                                    <li class="sizeSelector" {% if sz in availableSize %} onclick="choosesize('{{productDet.0.id}}','{{sz}}')" {% else %} onclick="alert('No Available')" {% endif %}  data-size={{sz}}><a style="{% if sz == productDet.0.prd_size %} background-color:#046963 {% endif %}">{{sz}}</a></li>
+                                    {% for sz in lowestChildVariant %}
+                                    <li class="sizeSelector"  onclick="chooseVariant('{{sz.id}}','{{productDet.id}}')" data-size={{sz.sizeTable.id}}><a >{{sz.sizeTable.name}}</a></li>
                                     {% endfor %}
                                 </ul>
                             </div>
                             <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                             <div class="detail-extralink">
                                 <div class="detail-qty border radius">
-                                    <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                    <span class="qty-val">1</span>
-                                    <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                    <a class="qty-down " onclick="quantity('down')" ><i class="fi-rs-angle-small-down"></i></a>
+                                        <input name="quantity" form="addtocart" id="quantityinput" type="hidden" value="1">
+                                        <span class="qty-val" id="quantity" maximum={{productDet.prd_availabilityCount}} >1</span>
+                                    <a class="qty-up " onclick="quantity('up')" ><i class="fi-rs-angle-small-up"></i></a>
                                 </div>
                                 <div class="product-extra-link2">
-                                    <button type="submit" class="button button-add-to-cart">Add to cart</button>
+                                    <form >
+                                        <button type="submit" class="button button-add-to-cart">Add to cart</button>
+                                    </form>
                                     <a aria-label="Add To Wishlist" class="action-btn hover-up" href="#"><i class="fi-rs-heart"></i></a>
                                     <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                 </div>
                             </div>
                             <ul class="product-meta font-xs color-grey mt-50">
                                 <!-- <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li> -->
-                                <li class="mb-5">Tags: {{productDet.0.prd_tags}} </li>
-                                <li>Availability:<span class="in-stock text-success ml-5">{{productDet.0.prd_availabilityCount}} Items In Stock</span></li>
+                                <li class="mb-5">Tags: {{productDet.prd_tags}} </li>
+                                <input type="hidden" name="maxQuantity" value="{{productDet.prd_availabilityCount}}" id="maxQuantity" >
+                                <li>Availability:<span class="in-stock text-success ml-5" id="prd_availabilityCount">{{productDet.prd_availabilityCount}} Items In Stock</span></li>
                             </ul>
                         </div>
                         <!-- Detail Info -->

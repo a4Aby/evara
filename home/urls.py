@@ -14,5 +14,6 @@ urlpatterns = [
     path('itemlist/',views.itemList,name='itmeList'),
     path('productDetials/',views.productDetials,name='productDetials'),
     path('childproductDetials/',views.childproductDetials,name='childproductDetials'),
-    path('productVariants/',views.productVariants,name='productVariants'),
+    path('chooseColor/',views.chooseColor,name='chooseColor'),
+    path('chooseVariant/',views.chooseVariant,name='chooseVariant'),
 ]
