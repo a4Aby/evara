@@ -19,7 +19,7 @@
                                 <p> We found <strong class="text-brand">{{items_count}}</strong> items for you!</p>
                             </div>
                             <div class="sort-by-product-area">
-                                <div class="sort-by-cover mr-10">
+                                <div class="sort-by-cover mr-10" hidden>
                                     <div class="sort-by-product-wrap">
                                         <div class="sort-by">
                                             <span><i class="fi-rs-apps"></i>Show:</span>
@@ -77,16 +77,16 @@
                                     <div class="product-action-1">
                                         <a aria-label="Quick view" class="action-btn hover-up viewProduct" data-productId={{product.id}} data-bs-toggle="modal" data-bs-target="#quickViewModal" tabindex="0">
                                         <i class="fi-rs-eye"></i></a>
-                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                        <a aria-label="Add To Wishlist" class="action-btn hover-up AddWishlist" data-productid="{{product.id}}" ><i class="fi-rs-heart"></i></a>
+                                        <!-- <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
                                     </div>
                                     <div class="product-badges product-badges-position product-badges-mrg">
-                                        <span class="hot">lorem ipsum</span>
+                                        <span class="hot">{{product.prd_BrandTable.brandName}}</span>
                                     </div>
                                 </div>
                                 <div class="product-content-wrap">
                                     <div class="product-category">
-                                        <a href="shop-grid-right.html">lorem ipsum</a>
+                                        <a href="shop-grid-right.html">{{product.prd_sub_category.cat_name}}</a>
                                     </div>
                                     <h2><a href="shop-product-right.html">{{product.prd_name}}</a></h2>
                                     <div class="product-price">
@@ -125,7 +125,7 @@
                         {% include "cat.html" %} 
                         
                         <!-- Fillter By Price -->
-                        <div class="sidebar-widget price_range range mb-30">
+                        <div class="sidebar-widget price_range range mb-30" hidden>
                             <!-- <div class="widget-header position-relative mb-20 pb-10">
                                 <h5 class="widget-title mb-10">Fill by price</h5>
                                 <div class="bt-1 border-color-1"></div>
@@ -141,7 +141,7 @@
                                 </div>
                             </div> -->
                             
-                            <div class="list-group">
+                            <div class="list-group" >
                                 <div class="list-group-item mb-10 mt-10">
                                     <label class="fw-900">Color</label>
                                     <div class="custome-checkbox">

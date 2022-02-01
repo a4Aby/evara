@@ -37,11 +37,11 @@
             <div class="col col-check flex-grow-0">
               <p>ID</p>
             </div>
-            <div class="col-lg-3 col-sm-4 col-8 flex-grow-1 col-name">
-              <p>CUSTOMER</p>
+            <div class="col-lg-1 col-sm-2 col-4 col-name">
+              <p>USER</p>
             </div>
-            <div class="col-lg-1 col-sm-2 col-4 col-price"> <span>PRICE</span> </div>
-            <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>CATEGORY</span> </div>
+            <div class="col-lg-1 col-sm-2 col-4 col-price"> <span>COUNT</span> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>PRICE</span> </div>
             <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>PRODUCT</span> </div>
             <div class="col-lg-2 col-sm-2 col-4 col-date"> <span>CART DATE</span> </div>
           </div>
@@ -49,21 +49,24 @@
         </article>
         <!-- itemlist  .// -->
         {% for row in orderList %}
-        <article class="itemlist">
+        {% for item in row.get_cart_item %}
+        <article class="itemlist"> 
           <div class="row align-items-center">
             <div class="col col-check flex-grow-0">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox">
               </div>
             </div>
-            <div class="col-lg-1 col-sm-2 col-4 col-price"> <span>{{ row.prd_currency }} {{ row.prd_price }}</span> </div>
-            <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>{{ row.prd_parent_category }}/{{ row.prd_sub_category }}</span> </div>
-            <div class="col-lg-1 col-sm-2 col-4 col-status"> <span class="badge rounded-pill alert-success">Active</span> </div>
-            <div class="col-lg-2 col-sm-2 col-4 col-date"> <span>{{ row.prd_created_on }}</span> </div>
-            <div class="col-lg-2 col-sm-2 col-4 col-action text-end"> <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a> <a href="#" class="btn btn-sm font-sm btn-light rounded"> <i class="material-icons md-delete_forever"></i> Delete </a> </div>
+            <div class="col-lg-1 col-sm-2 col-4 col-price"> <span>{{ row.customer.name }} </span> </div>
+            <div class="col-lg-1 col-sm-2 col-4 col-price"> <span>{{item.quantity}} </span> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-price"> <span>{{item.variant.price}}</span> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-date"> <span>{{ item.product }} | {{ item.product.prd_color }} | {{ item.variant.sizeTable.name }}</span> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-date"> <span>{{ item.date_added }}</span> </div>
+            <div class="col-lg-2 col-sm-2 col-4 col-action text-end"> 
+              <a href="#" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Assign To Deliver</a>
           </div>
-          <!-- row .// --> 
-        </article>
+        </article> 
+        {% endfor %}
         {% endfor %}
         <!-- itemlist  .// -->
         

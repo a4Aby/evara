@@ -63,6 +63,8 @@
 		console.log('Cart:', cart)
 	
 	</script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <style> #toast-container > .toast-success { background-color: #046963; } </style>
 </head>
 
 <body data-user='{{request.user}}'>
@@ -203,7 +205,7 @@
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info">
                             <ul>
-                                <li><i class="fi-rs-smartphone"></i> <a href="#">(+01) - 2345 - 6789</a></li>
+                                <li><i class="fi-rs-smartphone"></i> <a href="https://wa.me/23456789">(+01) - 2345 - 6789</a></li>
                                 <li><i class="fi-rs-marker"></i><a  href="page-contact.html">Our location</a></li>
                             </ul>
                         </div>
@@ -266,19 +268,19 @@
                                 style="display: none;"
                                 {% endif %}
                                 >
-                                    <a href="/accounts/wishlist">
+                                    <a href="/store/wishlist">
                                         <img class="svgInject" alt="Evara" src="/static/imgs/theme/icons/icon-heart.svg">
                                         <span class="pro-count blue Wishlistcount">{{Wishlistcount}}</span>
                                     </a>
                                 </div>
-                                <div class="header-action-icon-2"
-                                {% if cartTotal is none %}
+                                <div class="header-action-icon-2 CartcountDiv"
+                                {% if not cartTotal %}
                                 style="display: none;"
                                 {% endif %}
                                 >
                                     <a class="mini-cart-icon" href="/store/cart">
                                         <img alt="Evara" src="/static/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue">{{cartTotal}}</span>
+                                        <span class="pro-count blue cartTotal">{{cartTotal}}</span>
                                     </a>
                                 <!--    <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                         <ul>
@@ -337,7 +339,19 @@
                             </a>
                             <div class="categori-dropdown-wrap categori-dropdown-active-large">
                                 <ul>
+                                    {% for category in parent_category %}
                                     <li class="has-children">
+                                        <a href="#"><i class="evara-font-list"></i>{{category}}</a>
+                                        <div class="dropdown-menu">
+                                            <ul class="mega-menu d-lg-flex">
+                                                {% for sub_category in category.children.all %}
+                                                    <li><a href="/store/items/{{sub_category.id}}">{{sub_category.cat_name}}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                    <!-- <li class="has-children">
                                         <a href="#"><i class="evara-font-dress"></i>Women's Clothing</a>
                                         <div class="dropdown-menu">
                                             <ul class="mega-menu d-lg-flex">
@@ -507,7 +521,7 @@
                                             <li><a href="#"><i class="evara-font-diamond"></i>Consumer Electronics</a></li>
                                             <li><a href="#"><i class="evara-font-home"></i>Automobiles & Motorcycles</a></li>
                                         </ul>
-                                    </li>
+                                    </li> -->
                                 </ul>
                                 <div class="more_categories">Show more...</div>
                             </div>
@@ -588,7 +602,9 @@
                         </div>
                     </div>
                     <div class="hotline d-none d-lg-block">
-                        <p><i class="fi-rs-headset"></i><span>Hotline</span> 1900 - 888 </p>
+                        <a href="tel:1900888">
+                            <p><i class="fi-rs-headset"></i><span>Hotline</span> 1900 - 888 </p>
+                        </a>
                     </div>
                     <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%</p>
                     <div class="header-action-right d-block d-lg-none">
@@ -899,9 +915,19 @@
              if(data.Wishlistcount > 0){
                 $(".WishlistcountDiv").show();
                 $(".Wishlistcount").html(data.Wishlistcount);
+                toastr.success(data.message);
              }
             }, "json");
         });
+
+        function AddWishlist(productId){
+            $.post( "{% url 'store:add_wishlist' %}",{'productId' : productId, 'csrfmiddlewaretoken' : "{{ csrf_token }}"}, function( data ) {
+             if(data.Wishlistcount > 0){
+                $(".WishlistcountDiv").show();
+                $(".Wishlistcount").html(data.Wishlistcount);
+             }
+            }, "json");
+        }
 
     $( "#searchItem" ).autocomplete({
       source: function( request, response ) {
@@ -918,7 +944,7 @@
       },
       minLength: 1,
       select: function( event, ui ) {
-          
+          window.location.replace('/store/search/'+ui.item.value)
       },
       open: function() {
         $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
@@ -947,11 +973,12 @@
         $.post( "{% url 'home:chooseVariant' %}",{'childProduct' : childProduct,'variant_id' : variant_id, 'csrfmiddlewaretoken' : "{{ csrf_token }}"}, function( data ) {
             // $('.productDetials').html(data)
             $("#prd_availabilityCount").html(data.availabilityCount+' Items In Stock');
-            $("#prd_price").html('&#8377;'+data.availabilityCount);
-            $("#prd_strike_price").html('&#8377;'+data.availabilityCount);
+            $("#prd_price").html('&#8377;'+data.price);
+            $("#prd_strike_price").html('&#8377;'+data.strike_price);
             $("#prd_oferPercentage").html(data.offerPercentage);
             $("#maxQuantity").val(data.availabilityCount);
-            // $("#prd_availabilityCount").val(data.availabilityCount);
+            $("#addcartButton").attr('onclick','addCart('+childProduct+','+variant_id+')');
+            // $("#prd_availabilityCount").val(data.offerPercentage);
         }, "json");
     }
 
@@ -976,7 +1003,62 @@
             quantityinput.val(parseInt(cur-1));
         }
     }
+
+
+    function addCart(product,variant){
+        var quantity = $("#quantity").html();
+        $.post( "{% url 'store:addCart' %}",{'quantity' : quantity,'productId' : product,'action' : 'add','variant' : variant, 'csrfmiddlewaretoken' : "{{ csrf_token }}"}, function( data ) {
+         if(data.count > 0){
+            $('.CartcountDiv').show();
+            $('.cartTotal').html(data.count);
+         }else{
+            $('.CartcountDiv').hide();
+            $('.cartTotal').html(data.count);
+         }
+         toastr.success(data.message);
+
+        }, "json");
+    }
+
+    $('.directAddToCatr').click(function(){
+        var productId = $(this).data('p_id');
+        addCart(productId,'');
+    });
+
+    $( "#placeOrder" ).on( "submit", function( event ) {
+        event.preventDefault();
+        var placeOrder = $('#placeOrder').serialize();
+        $.post( "{% url 'store:placeOrder' %}",placeOrder, function( data ) {
+            toastr.success(data.message);
+        }, "json");
+    });
   </script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script type="text/javascript">
+// Default Configuration
+    $(document).ready(function() {
+        toastr.options = {
+            'closeButton': true,
+            'debug': false,
+            'newestOnTop': false,
+            'progressBar': false,
+            'positionClass': 'toast-top-right',
+            'preventDuplicates': false,
+            'showDuration': '1000',
+            'hideDuration': '1000',
+            'timeOut': '5000',
+            'extendedTimeOut': '1000',
+            'showEasing': 'swing',
+            'hideEasing': 'linear',
+            'showMethod': 'fadeIn',
+            'hideMethod': 'fadeOut',
+        }
+    });
+</script>
+
+  {% if script %}
+  <script src="{{script}}"></script>
+  {% endif %}
   <!-- Cart  JS -->
   <script src="/static/js/cart.js"></script>
   

@@ -7,6 +7,7 @@ from django.http import request
 from django.http import HttpResponse,HttpResponseRedirect
 from django.http.response import JsonResponse
 from django.shortcuts import render,redirect
+from administration.decorator import allowed_user
 
 from store.models import Order, Wishlist
 from .models import Brand, Categories, Color, ProductImages, Products, Size, Variants 
@@ -20,6 +21,7 @@ from django.utils.safestring import mark_safe
 from django.core import serializers
 # Create your views here.
 
+@allowed_user(allowed_roles=['admin'])
 def insertVariants(request):
 
     product = Products.objects.get(id = request.POST['prd_id'])
@@ -89,6 +91,7 @@ def insertVariants(request):
 
     return redirect("/add-variant/"+request.POST['prd_id'])
 
+@allowed_user(allowed_roles=['admin'])
 def addVariants(request,parant):
 
     product = Products.objects.get(id = parant)
@@ -103,7 +106,8 @@ def addVariants(request,parant):
     }
 
     return render(request,'admin_files/add-new-product-variant.html',content)
-    
+
+@allowed_user(allowed_roles=['admin'])
 def showVariants(request):
     parant = request.GET.get('parant', None)
     variance = Products.objects.filter(proParent = parant)
@@ -112,11 +116,13 @@ def showVariants(request):
     }
     return render(request,'admin_files/variantsList.html',data)
 
+@allowed_user(allowed_roles=['admin'])
 def sizeDelete(request,id):
     record = Size.objects.get(id = id)
     record.delete()
     return redirect("/size-Master")
 
+@allowed_user(allowed_roles=['admin'])
 def sizeAdd(request):
     sizeColor = Size.objects.filter(name = request.POST['name']).count()
     
@@ -127,6 +133,7 @@ def sizeAdd(request):
     
     return redirect('/size-Master')
 
+@allowed_user(allowed_roles=['admin'])
 def sizeMaster(request):
     size = Size.objects.all()
     data = {
@@ -134,6 +141,7 @@ def sizeMaster(request):
     }
     return render(request,'admin_files/sizeMaster.html', data)
 
+@allowed_user(allowed_roles=['admin'])
 def colorAdd(request):
     checkColor = Color.objects.filter(name = request.POST['name'],code = request.POST['code']).count()
     
@@ -145,6 +153,8 @@ def colorAdd(request):
     
     return redirect('/color-Master')
 
+
+@allowed_user(allowed_roles=['admin'])
 def colorMaster(request):
     color = Color.objects.all()
     data = {
@@ -152,6 +162,7 @@ def colorMaster(request):
     }
     return render(request,'admin_files/colorMaster.html', data)
 
+@allowed_user(allowed_roles=['admin'])
 def wishList(request):
     wishList = Wishlist.objects.all()
     all_categories = Categories.objects.all()
@@ -163,9 +174,9 @@ def wishList(request):
     return render(request,'admin_files/wishList.html', data)
 
 
-
+@allowed_user(allowed_roles=['admin'])
 def orderList(request):
-    orderList = Order.objects.all()
+    orderList = Order.objects.filter(complete = 1)
     all_categories = Categories.objects.all()
 
     data = { 
@@ -174,12 +185,13 @@ def orderList(request):
         }
     return render(request,'admin_files/orderList.html', data)
 
-
+@allowed_user(allowed_roles=['admin'])
 def get_subcategory(request):
     all_categories = Categories.objects.filter(parent_category=request.POST['mainCategory'])
     jsonData = serializers.serialize('json',all_categories)
     return JsonResponse(jsonData,safe=False)
 
+@allowed_user(allowed_roles=['admin'])
 def brandAdd(request):
 
     AddedBrand = Brand.objects.create(
@@ -188,6 +200,7 @@ def brandAdd(request):
             )
     return redirect('/brand-Master')
 
+@allowed_user(allowed_roles=['admin'])
 def brandMaster(request):
     brand = Brand.objects.all()
     data = {
@@ -211,10 +224,12 @@ def login(request):
         return render(request,'admin_files/login.html')
 
 @login_required
+@allowed_user(allowed_roles=['admin'])
 def dashboard(request):
     return render(request,'admin_files/index.html')
 
 @login_required
+@allowed_user(allowed_roles=['admin'])
 def categories(request):
         all_categories = Categories.objects.all()
         data = { 
@@ -222,7 +237,9 @@ def categories(request):
             'i' : 0
         }
         return render(request,'admin_files/categories.html',{"all_categories" : data})
+
 @login_required
+@allowed_user(allowed_roles=['admin'])
 def add_categories(request):
     if request.method == "POST":
         cat_name = request.POST['cat_name']
@@ -241,7 +258,9 @@ def add_categories(request):
 
         category.save()
         return redirect("/administration/categories/")
+
 @login_required
+@allowed_user(allowed_roles=['admin'])
 def delete_categories(request,cat_id):
     record = Categories.objects.get(id = cat_id)
     record.delete()
@@ -251,6 +270,7 @@ def delete_categories(request,cat_id):
 # products
 @csrf_protect
 @login_required
+@allowed_user(allowed_roles=['admin'])
 def add_new_product(request):
     all_categories = Categories.objects.filter(parent_category=None)
     parentProducts = Products.objects.filter(proParent=None)
@@ -266,6 +286,8 @@ def add_new_product(request):
     }
 
     return render(request,'admin_files/add-new-product.html',content)
+
+@allowed_user(allowed_roles=['admin'])
 def updateProduct(request):
     if request.method == "POST":
 
@@ -319,7 +341,7 @@ def updateProduct(request):
 
     return redirect("/product-list/")
 
-
+@allowed_user(allowed_roles=['admin'])
 def editProduct(request,prd_id):
     product = Products.objects.filter(id = prd_id)
     all_categories = Categories.objects.filter(parent_category=None)
@@ -339,6 +361,7 @@ def editProduct(request,prd_id):
 
 
 @login_required
+@allowed_user(allowed_roles=['admin'])
 def insert_product(request):
     if request.method == "POST":
         prd_description = request.POST["prd_description"]
@@ -393,6 +416,7 @@ def insert_product(request):
     return redirect("/product-list/")
 
 @login_required
+@allowed_user(allowed_roles=['admin'])
 def list_products(request):
     context = {
         'products':Products.objects.filter(proParent=None),
@@ -401,6 +425,7 @@ def list_products(request):
     
 #form
 @login_required
+@allowed_user(allowed_roles=['admin'])
 def add_category_form(request):
     all_categories = Categories.objects.all()
     submitted = False

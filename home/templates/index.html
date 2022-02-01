@@ -335,7 +335,7 @@
                                                         <span class="old-price">&#8377;{{product.prd_strike_price}}</span>
                                                     </div>
                                                     <div class="product-action-1 show">
-                                                        <a aria-label="Add To Cart" class="action-btn hover-up" href="#"><i class="fi-rs-shopping-bag-add"></i></a>
+                                                        <a aria-label="Add To Cart" class="action-btn hover-up directAddToCatr" data-p_id="{{product.id}}"  href="#"><i class="fi-rs-shopping-bag-add"></i></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -393,7 +393,7 @@
                                                         <span class="old-price">&#8377;{{product.prd_strike_price}}</span>
                                                     </div>
                                                     <div class="product-action-1 show">
-                                                        <a aria-label="Add To Cart" class="action-btn hover-up" href="#"><i class="fi-rs-shopping-bag-add"></i></a>
+                                                        <a aria-label="Add To Cart" class="action-btn hover-up directAddToCatr" data-p_id="{{product.id}}" href="#"><i class="fi-rs-shopping-bag-add"></i></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -447,7 +447,7 @@
                                                         <span class="old-price">&#8377;{{product.prd_strike_price}}</span>
                                                     </div>
                                                     <div class="product-action-1 show">
-                                                        <a aria-label="Add To Cart" class="action-btn hover-up" href="#"><i class="fi-rs-shopping-bag-add"></i></a>
+                                                        <a aria-label="Add To Cart" class="action-btn hover-up directAddToCatr" data-p_id="{{product.id}}" href="#"><i class="fi-rs-shopping-bag-add"></i></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -592,10 +592,17 @@
                                     </a>
                                 </div>
                                 <div class="product-action-1">
-                                    <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
+                                    <!-- <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
                                     <i class="fi-rs-eye"></i></a>
-                                    <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="#" tabindex="0"><i class="fi-rs-heart"></i></a>
-                                    <a aria-label="Compare" class="action-btn small hover-up" href="shop-compare.html" tabindex="0"><i class="fi-rs-shuffle"></i></a>
+                                    <a aria-label="Add To Wishlist" class="action-btn small hover-up"   href="#" tabindex="0"><i class="fi-rs-heart"></i></a> -->
+                                    <a aria-label="Quick view" class="action-btn small hover-up viewProduct" data-productId={{product.id}} data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
+                                    {% if user.is_authenticated %}
+                                    <a aria-label="Add To Wishlist" class="action-btn small hover-up AddWishlist" data-productId={{product.id}} ><i class="fi-rs-heart"></i></a>
+                                    {% else %}
+                                    <a aria-label="Add To Wishlist" class="action-btn small hover-up disabled" data-productId={{product.id}} ><i class="fi-rs-heart"></i></a>
+                                    {% endif %}
+                                    
+                                    <!-- <a aria-label="Compare" class="action-btn small hover-up" href="shop-compare.html" tabindex="0"><i class="fi-rs-shuffle"></i></a> -->
                                 </div>
                                 <div class="product-badges product-badges-position product-badges-mrg">
                                     <span class="hot">Hot</span>
@@ -634,7 +641,7 @@
                 </div>
             </div>
         </section>
-        <section class="bg-grey-9 section-padding">
+        <section class="bg-grey-9 section-padding" hidden>
             <div class="container pt-15 pb-25">
                 <div class="heading-tab d-flex">
                     <div class="heading-tab-left wow fadeIn animated">
@@ -1356,7 +1363,7 @@
                 </div>
             </div>
         </section>
-        <section>
+        <section hidden>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-3 col-md-6 mb-sm-5 mb-md-0">

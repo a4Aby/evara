@@ -1,0 +1,45 @@
+{% extends 'home_base.html' %}
+
+    {% block content %}
+<main class="main">
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb"> <a href="/" rel="nofollow">Home</a> <span></span> Shop <span></span> Your Cart </div>
+    </div>
+  </div>
+  <section class="mt-50 mb-50">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table shopping-summery text-center clean">
+              <thead>
+                <tr class="main-heading">
+                  <th scope="col">Image</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in items %}
+                <tr>
+                  <td class="image product-thumbnail"><img src="/static/imgs/shop/product-1-2.jpg" alt="#"></td>
+                  <td class="product-des product-name"><h5 class="product-name"><a href="shop-product-right.html">{{item.product.prd_name}}</a></h5>
+                    <p class="font-xs">{{item.product.prd_description}} </p></td>
+                  <td class="price" data-title="Price"><span>&#8377;{{item.product.prd_price}} </span></td>
+                  <td class="action" data-title="Remove"><a href="/store/deletewishlist/{{item.id}}" class="text-muted"><i class="fi-rs-trash"></i></a><a href="/store/addtoCart/{{item.id}}" class="text-muted">     <i class="fi-rs-shopping-bag-add"></i></a> </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                  <td colspan="6" class="text-end"><a class="btn" href="/store/clearWishList" > <i class="fi-rs-cross mr-10"></i>Clear Wishlist</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+		  </div>
+		 </div>
+      </div>
+   
+  </section>
+</main>{% endblock %}

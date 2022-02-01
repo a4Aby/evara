@@ -1,6 +1,6 @@
 from itertools import product
 from django.db import models
-from administration.models import Products
+from administration.models import Products, Variants
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -43,8 +43,14 @@ class Order(models.Model):
 		total = sum([item.quantity for item in orderitems])
 		return total 
 
+	@property
+	def get_cart_item(self):
+		orderitems = self.orderitem_set.all()
+		return orderitems 
+
 class OrderItem(models.Model):
 	product = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
+	variant = models.ForeignKey(Variants, on_delete=models.SET_NULL, null=True)
 	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
 	quantity = models.IntegerField(default=0, null=True, blank=True)
 	date_added = models.DateTimeField(auto_now_add=True)

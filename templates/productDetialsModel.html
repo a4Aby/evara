@@ -1,43 +1,173 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-12 col-xs-12">
                         <div class="detail-gallery">
-                            <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-                            <!-- MAIN SLIDES -->
-                            <!-- <div class="product-image-slider">
-                                <figure class="border-radius-10">
-                                    <img src="/static/imgs/shop/product-16-2.jpg" alt="product image">
-                                </figure>
-                                <figure class="border-radius-10">
-                                    <img src="/static/imgs/shop/product-16-1.jpg" alt="product image">
-                                </figure>
-                                <figure class="border-radius-10">
-                                    <img src="/static/imgs/shop/product-16-3.jpg" alt="product image">
-                                </figure>
-                                <figure class="border-radius-10">
-                                    <img src="/static/imgs/shop/product-16-4.jpg" alt="product image">
-                                </figure>
-                                <figure class="border-radius-10">
-                                    <img src="/static/imgs/shop/product-16-5.jpg" alt="product image">
-                                </figure>
-                                <figure class="border-radius-10">
-                                    <img src="/static/imgs/shop/product-16-6.jpg" alt="product image">
-                                </figure>
-                                <figure class="border-radius-10">
-                                    <img src="/static/imgs/shop/product-16-7.jpg" alt="product image">
-                                </figure>
-                            </div> -->
-                            <!-- THUMBNAILS -->
-                            <!-- <div class="slider-nav-thumbnails pl-15 pr-15">
-                                <div><img src="/static/imgs/shop/thumbnail-3.jpg" alt="product image"></div>
-                                <div><img src="/static/imgs/shop/thumbnail-4.jpg" alt="product image"></div>
-                                <div><img src="/static/imgs/shop/thumbnail-5.jpg" alt="product image"></div>
-                                <div><img src="/static/imgs/shop/thumbnail-6.jpg" alt="product image"></div>
-                                <div><img src="/static/imgs/shop/thumbnail-7.jpg" alt="product image"></div>
-                                <div><img src="/static/imgs/shop/thumbnail-8.jpg" alt="product image"></div>
-                                <div><img src="/static/imgs/shop/thumbnail-9.jpg" alt="product image"></div>
-                            </div> -->
+                            <!-- <span class="zoom-icon"><i class="fi-rs-search"></i></span> -->
+                            <style>
+                            .image-gallery {
+                            margin: auto;
+                            width: 600px;
+                            position: relative;
+                            }
+                            .image-container {
+                            width: 64%;
+                            height: 400px;
+                            position: relative;
+                            overflow: hidden;
+                            background: #fff;
+                            }
+                            .thumbnails {
+                            width: 64%;
+                            display: flex;
+                            }
+                            .thumbnails label {
+                            display: inline-block;
+                            width: 150px;
+                            height: 100px;
+                            background-size: cover;
+                            margin: 0;
+                            flex: 1 1 150px;
+                            cursor: pointer;
+                            }
+                            
+                            .image-1, .image-2, .image-3, .image-4 {
+                            background-size: cover;
+                            width: 100%;
+                            height: 100%;
+                            position: absolute;
+                            opacity: 0;
+                            transition: all 1.2s ease-out;
+                            }
+                            
+                            {% for image in images  %}
+                            .image-{{ forloop.counter }},
+                            .thumbnails label[for="image{{forloop.counter}}"] {
+                            background-image: url('/media/{{image.image}}');
+                            }
+
+                            #image{{ forloop.counter }}:checked + .image-{{ forloop.counter }} {
+                            opacity: 1;
+                            }
+                            {% endfor %}
+
+                            /* #image1:checked + .image-1,
+                            #image2:checked + .image-2,
+                            #image3:checked + .image-3,
+                            #{{ forloop.counter }}checked + .image-4 {{ forloop.counter }}
+                            opacity: 1;
+                            } */
+
+
+                            .image-gallery input[type="radio"] {
+                            position: absolute;
+                            top: 370px;
+                            z-index: 100;
+                            -webkit-appearance: none;
+                            -moz-appearance: none;
+                            appearance: none;
+                            display: inline-block;
+                            background-color: #00000033;
+                            height: 16px;
+                            width: 16px;
+                            border: 3px solid #f1f1f1;
+                            border-radius: 16px;
+                            cursor: pointer;
+                            outline: none;
+                            box-shadow: 0px 1px 4px #00000088;
+                            }
+                            .image-gallery input[type="radio"]:hover {
+                            background-color: #f7f7f780;
+                            }
+                            .image-gallery input[type="radio"]:checked {
+                            background-color: #f1f1f1;
+                            }
+                            .image-gallery input[type="radio"]:nth-of-type(1) {
+                            left: 50%;
+                            margin-left: -36px;
+                            }
+                            .image-gallery input[type="radio"]:nth-of-type(2) {
+                            left: 50%;
+                            margin-left: -12px;
+                            }
+                            .image-gallery input[type="radio"]:nth-of-type(3) {
+                            left: 50%;
+                            margin-left: 12px;
+                            }
+                            .image-gallery input[type="radio"]:nth-of-type(4) {
+                            left: 50%;
+                            margin-left: 36px;
+                            }
+
+                            .image-gallery label.prev,
+                            .image-gallery label.next {
+                            position: absolute;
+                            top: 50%;
+                            z-index: 100;
+                            color: #f1f1f1;
+                            text-shadow: 0px 1px 4px #00000088;
+                            font-family: "Georgia", "Apple Symbols", serif;
+                            font-size:40px;
+                            font-weight: 700;
+                            line-height:40px;
+                            text-align:center;
+                            height: 40px;
+                            width: 40px;
+                            margin-top: -20px;
+                            cursor: pointer;
+                            opacity:0;
+                            transition: opacity 0.5s linear;
+                            }
+                            .image-gallery:hover label.prev,
+                            .image-gallery:hover label.next {
+                            opacity:1;
+                            }
+                            .image-gallery label.prev:before {
+                            content: '\003c'
+                            }
+                            .image-gallery label.next:before{
+                            content: '\003e'
+                            }
+                            .image-gallery label.prev{
+                            left: 10px;
+                            }
+                            .image-gallery label.next{
+                            right: 10px;
+                            }
+                            .image-gallery label.prev:hover,
+                            .image-gallery label.next:hover {
+                            margin-top: -22px;  
+                            text-shadow: 0px 3px 4px #00000088;
+                            }                               
+                            </style>
+                            <div class="image-gallery">
+                                <div class="image-container">
+                                    {% for image in images  %}
+                                    <input type="radio" name="gallery_group" id="image{{ forloop.counter }}" checked />
+                                    <div class="image-{{ forloop.counter }}">
+                                        <!-- <label class="prev" for="image{{forloop.counter}}"></label>
+                                        <label class="next" for="image{{forloop.counter}}"></label>  -->
+                                    </div>
+                                    {% endfor %}
+                                  <!-- <input type="radio" name="gallery_group" id="image2" />
+                                  <div class="image-2">
+                                    <label class="prev" for="image1"></label>
+                                    <label class="next" for="image3"></label> </div>
+                                  <input type="radio" name="gallery_group" id="image3" />
+                                  <div class="image-3">
+                                    <label class="prev" for="image2"></label>
+                                    <label class="next" for="image4"></label> </div>
+                                  <input type="radio" name="gallery_group" id="image4" />
+                                  <div class="image-4">
+                                    <label class="prev" for="image3"></label>
+                                    <label class="next" for="image1"></label> </div> -->
+                                </div>
+                                <div class="thumbnails">
+                                  <label for="image1"></label>
+                                  <label for="image2"></label>
+                                  <label for="image3"></label>
+                                  <label for="image4"></label>
+                                </div>
+                              </div>                            
                         </div>
-                        <!-- End Gallery -->
                         <div class="social-icons single-share">
                             <ul class="text-grey-5 d-inline-block">
                                 <li><strong class="mr-10">Share this:</strong></li>
@@ -104,11 +234,14 @@
                                     <a class="qty-up " onclick="quantity('up')" ><i class="fi-rs-angle-small-up"></i></a>
                                 </div>
                                 <div class="product-extra-link2">
-                                    <form >
-                                        <button type="submit" class="button button-add-to-cart">Add to cart</button>
-                                    </form>
-                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" href="#"><i class="fi-rs-heart"></i></a>
-                                    <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                        <button id="addcartButton" onclick="addCart('{{productDet.id}}','{{lowestVariant.0.id}}')" class="button button-add-to-cart">Add to cart</button>
+                                        {% if user.is_authenticated %}
+                                        <a aria-label="Add To Wishlist" class="action-btn small hover-up AddWishlist" onclick="AddWishlist('{{productDet.id}}')" data-productId={{productDet.id}} ><i class="fi-rs-heart"></i></a>
+                                        {% else %}
+                                        <a aria-label="Add To Wishlist" class="action-btn small hover-up disabled" data-productId={{productDet.id}} ><i class="fi-rs-heart"></i></a>
+                                        {% endif %}
+                                        <!-- <a aria-label="Add To Wishlist" class="action-btn hover-up" href="#"><i class="fi-rs-heart"></i></a> -->
+                                        <!-- <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
                                 </div>
                             </div>
                             <ul class="product-meta font-xs color-grey mt-50">

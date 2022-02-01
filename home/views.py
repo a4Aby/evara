@@ -5,13 +5,14 @@ from statistics import variance
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import render
-from administration.models import Brand, Categories, Color, Products, Size, Variants
+from administration.models import Brand, Categories, Color, ProductImages, Products, Size, Variants
 from administration.views import categories
 from datetime import datetime,timedelta
 from django.core import serializers
 from django.http.response import JsonResponse
 
-from store.models import Customer, Wishlist
+from store.models import Customer, Order, OrderItem, Wishlist
+from store.utils import cartData
 
 # Create your views here.
 def itemList(request):
@@ -32,13 +33,17 @@ def chooseColor(request):
     choosedchildProduct = Products.objects.get(id = request.POST['childProduct'])
     childProduct = Products.objects.filter(proParent_id = choosedchildProduct.proParent_id)
     
-    # lowestVariant = Variants.objects.raw('SELECT * FROM administration_variants WHERE product_id = '+request.POST['childProduct']+' ORDER BY price ASC LIMIT 1')
     ChildVariant = Variants.objects.filter(product = choosedchildProduct.id)
+    images = ProductImages.objects.filter(product = choosedchildProduct.id)
+    lowestVariant = Variants.objects.raw('SELECT * FROM administration_variants WHERE product_id = %s ORDER BY price ASC LIMIT 1',(choosedchildProduct.id,))
     
     data = {
         'productDet' : choosedchildProduct,
         'childProduct' : childProduct,
         'lowestChildVariant' : ChildVariant,
+        'images' : images,
+        'imagesCount' : images.count(),
+        'lowestVariant' : lowestVariant,
     }
     return render(request,'productDetialsModel.html',data)
 def chooseVariant(request):
@@ -65,11 +70,17 @@ def productDetials(request):
     for child in lowestChild:
         lowestChildVariant = Variants.objects.filter(product = child.id)
         product = Products.objects.get(id = child.id)
-
+        images = ProductImages.objects.filter(product = child.id)
+        lowestVariant = Variants.objects.raw('SELECT * FROM administration_variants WHERE product_id = %s ORDER BY price ASC LIMIT 1',(child.id,))
+    
+    
     data = {
         'productDet' : product,
         'childProduct' : childProduct,
         'lowestChildVariant' : lowestChildVariant,
+        'images' : images,
+        'imagesCount' : images.count(),
+        'lowestVariant' : lowestVariant,
     }
     return render(request,'productDetialsModel.html',data)
 
@@ -98,9 +109,18 @@ def index(request):
     all_products = Products.objects.filter(proParent_id=None)
     new_arrivals = Products.objects.filter(proParent_id=None,prd_created_on__gte=datetime.now()-timedelta(days=7) )
     Wishlistcount = 0
+    cartTotal = 0
+
+    data = cartData(request)
+    cartTotal = data['cartItems']
+    order = data['order']
+    items = data['items']
+    
     if request.user.is_authenticated :
         customer, created = Customer.objects.get_or_create(user=request.user,defaults={'name': request.user.username,'email':request.user.email})
         Wishlistcount = Wishlist.objects.filter(customer = customer).count()
+        order = Order.objects.filter(customer=customer,complete = 0)
+        # cartTotal = OrderItem.objects.filter(order=order).count()
     
     categories = Categories.objects.all()
     brand = Brand.objects.all()
@@ -110,6 +130,7 @@ def index(request):
         'all_products' : all_products,
         'new_arrivals' : new_arrivals,
         'Wishlistcount' : Wishlistcount,
+        'cartTotal' : cartTotal,
         'brands':brand,
     }
     # return HttpResponse(all_products)
