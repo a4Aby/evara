@@ -94,7 +94,7 @@ except:
     HOSTNAME = 'localhost'
 #print(HOSTNAME)
 
-if HOSTNAME == 'Aby' or HOSTNAME == 'localhost' :
+if HOSTNAME != 'Aby' or HOSTNAME == 'localhost' :
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -196,3 +196,5 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
 USE_I18N = True
 USE_L10N = True
+RAZOR_KEY_ID = "rzp_test_FDFhxzYAbUK6sS"
+RAZOR_KEY_SECRET = "Wqt13UJfSUqARN6Sk84MHOC1"
