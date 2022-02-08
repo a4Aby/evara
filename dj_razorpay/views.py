@@ -2,7 +2,7 @@ from django.shortcuts import render
 import razorpay
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest,JsonResponse
 
 
 # authorize razorpay client with API Keys.
@@ -30,7 +30,16 @@ def payment_load(request):
     context['currency'] = currency
     context['callback_url'] = callback_url
  
-    return render(request, 'payment_load.html', context=context)
+    data={
+            'razorpay_order_id' : razorpay_order_id,
+            'razorpay_merchant_key': settings.RAZOR_KEY_ID,
+            'razorpay_amount': amount,
+            'currency': currency,
+            'callback_url': callback_url,
+            
+        }
+
+    return JsonResponse(data)
 
 # we need to csrf_exempt this url as
 # POST request will be made by Razorpay

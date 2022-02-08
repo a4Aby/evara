@@ -86,7 +86,7 @@
                       <i class="fi-rs-box-alt mr-10">
                       </i>
                     </a> -->
-                    <button class="btn  mr-0 mb-sm-15" form="placeOrder" value="Place Order"  >
+                    <button class="btn  mr-0 mb-sm-15" id="pay-btn" form="placeOrder" value="Place Order"  >
                       <i class="fi-rs-box-alt mr-10">
                         Place Order
                       </i>
@@ -379,9 +379,10 @@
 			
 			
           </div>-->
-     
+          
 		
       </div>
    
   </section>
 </main>{% endblock %}
+{% include "dj_razorpay/templates/payment_load.html" %}   
