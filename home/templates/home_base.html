@@ -1028,9 +1028,20 @@
     $( "#placeOrder" ).on( "submit", function( event ) {
         event.preventDefault();
         var placeOrder = $('#placeOrder').serialize();
-        $.post( "{% url 'store:placeOrder' %}",placeOrder, function( data ) {
-            toastr.success(data.message);
-        }, "json");
+        var payment_option = $("input[name='payment_option']:checked").val();
+        alert(placeOrder);
+        if(payment_option == 'razorpay'){
+            $(location).prop('href', "{% url 'dj_razorpay:payment_load' %}");
+            /*
+            $.post("{% url 'dj_razorpay:payment_load' %}",placeOrder,function( data ){
+                toastr.success(data.message);
+            },"JSON");
+            */
+        }else{    
+            $.post( "{% url 'store:placeOrder' %}",placeOrder, function( data ) {
+                toastr.success(data.message);
+            }, "json");
+        }
     });
   </script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>

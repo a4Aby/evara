@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'store',
     'bootstrap4',
+    'dj_razorpay',
     
 ]
 
@@ -67,6 +68,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR,'templates'),
             os.path.join(BASE_DIR, 'home', 'templates'),
             os.path.join(BASE_DIR, 'store', 'templates'),
+            os.path.join(BASE_DIR, 'dj_razorpay', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
