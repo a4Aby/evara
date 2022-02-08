@@ -4,14 +4,25 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseBadRequest,JsonResponse
 
+from store.models import Order, OrderItem
+
+
 
 # authorize razorpay client with API Keys.
 razorpay_client = razorpay.Client(
     auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
 
 def payment_load(request):
+    #print(request.POST.get('orderItems'))
+
+    #order = OrderItem.objects.filter(id=request.POST.get('orderItems'))
+    orderItem = OrderItem.objects.get(id=request.POST.get('orderItems'))
+    order= Order.objects.get(id = orderItem.order_id)
+
+    total = order.get_cart_total
+    
     currency = 'INR'
-    amount = 20000  # Rs. 200
+    amount = total * 100
  
     # Create a Razorpay Order
     razorpay_order = razorpay_client.order.create(dict(amount=amount,
@@ -20,7 +31,7 @@ def payment_load(request):
  
     # order id of newly created order.
     razorpay_order_id = razorpay_order['id']
-    callback_url = 'paymenthandler/'
+    callback_url = "{% url 'dj_razorpay:payment_load' %}"
  
     # we need to pass these details to frontend.
     context = {}
