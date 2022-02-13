@@ -1,3 +1,6 @@
+import http
+import json
+from urllib import response
 from django.db.models import Avg, Max, Min, Sum
 from itertools import product
 from pickle import FALSE
@@ -445,3 +448,108 @@ def add_category_form(request):
         'submitted' : submitted
     }
     return render(request,'add_categories_form.html',data)
+
+
+
+def getToken(request):
+    if 'shiprocketToken' in request.COOKIES:
+        return request.COOKIES['shiprocketToken']
+    
+    conn = http.client.HTTPSConnection("apiv2.shiprocket.in")
+
+    payload = {
+        'email' : 'nithinmp2k17@gmail.com',
+        'password' : 'NIthin@123#5',
+        }
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    conn.request("POST", "/v1/external/auth/login",json.dumps(payload), headers)
+    res = conn.getresponse()
+    data = res.read()
+    response = data.decode("utf-8")
+    dict = json.loads(response)
+    return dict['token']
+# @login_required
+# @allowed_user(allowed_roles=['admin'])
+
+def httpClient(request):
+    conn = http.client.HTTPSConnection("apiv2.shiprocket.in")
+    payload = request.payload
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization' : 'Bearer '+ request.token,
+    }
+    conn.request("POST", request.apiUrl,json.dumps(payload), headers)
+    res = conn.getresponse()
+    data = res.read()
+    response = data.decode("utf-8")
+    dict = json.loads(response)
+    return dict
+
+
+def addToShip(request):
+    token = getToken(request)
+    request.token = token
+    request.payload = {
+        "order_id": "",
+        "order_date": "",
+        "pickup_location": "",
+        "channel_id": "",
+        "comment": "",
+        "reseller_name": "",
+        "company_name": "",
+        "billing_customer_name": "",
+        "billing_last_name": "",
+        "billing_address": "",
+        "billing_address_2": "",
+        "billing_isd_code": "",
+        "billing_city": "",
+        "billing_pincode": "",
+        "billing_state": "",
+        "billing_country": "",
+        "billing_email": "",
+        "billing_phone": "",
+        "billing_alternate_phone":"",
+        "shipping_is_billing": "",
+        "shipping_customer_name": "",
+        "shipping_last_name": "",
+        "shipping_address": "",
+        "shipping_address_2": "",
+        "shipping_city": "",
+        "shipping_pincode": "",
+        "shipping_country": "",
+        "shipping_state": "",
+        "shipping_email": "",
+        "shipping_phone": "",
+        "order_items": [
+            {
+                "name": "",
+                "sku": "",
+                "units": "",
+                "selling_price": "",
+                "discount": "",
+                "tax": "",
+                "hsn": ""
+            }
+        ],
+        "payment_method": "",
+        "shipping_charges": "",
+        "giftwrap_charges": "",
+        "transaction_charges": "",
+        "total_discount": "",
+        "sub_total": "",
+        "length": "",
+        "breadth": "",
+        "height": "",
+        "weight": "",
+        "ewaybill_no": "",
+        "customer_gstin": "",
+        "invoice_number":"",
+        "order_type":"",
+    }
+    request.apiUrl = "/v1/external/orders/create/adhoc"
+    response = httpClient(request)
+    print(response)
+    # 
+    # return

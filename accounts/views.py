@@ -22,13 +22,13 @@ from django.views.generic import View, FormView
 from django.conf import settings
 from administration.models import Categories
 
-from store.models import Customer, Wishlist
+from store.models import Customer, ShippingAddress, Wishlist
 
 from .utils import (
     send_activation_email, send_reset_password_email, send_forgotten_username_email, send_activation_change_email,
 )
 from .forms import (
-    SignInViaUsernameForm, SignInViaEmailForm, SignInViaEmailOrUsernameForm, SignUpForm,
+    ChangeShippingForm, SignInViaUsernameForm, SignInViaEmailForm, SignInViaEmailOrUsernameForm, SignUpForm,
     RestorePasswordForm, RestorePasswordViaEmailOrUsernameForm, RemindUsernameForm,
     ResendActivationCodeForm, ResendActivationCodeViaEmailForm, ChangeProfileForm, ChangeEmailForm,
     DashboardForm
@@ -233,7 +233,45 @@ class ChangeProfileView(LoginRequiredMixin, FormView):
         messages.success(self.request, _('Profile data has been successfully updated.'))
 
         return redirect('accounts:change_profile')
+class ChangeShippingInfo(LoginRequiredMixin, FormView):
+    template_name = 'accounts/profile/change_shipping.html'
+    form_class = ChangeShippingForm
 
+    def get_initial(self):
+        user = self.request.user
+        customer = Customer.objects.get(user = user)
+        shipping, created = ShippingAddress.objects.get_or_create(customer = customer)
+        initial = super().get_initial()
+        initial['address'] = shipping.address
+        initial['address2'] = shipping.address2
+        initial['isd_code'] = shipping.isd_code
+        initial['city'] = shipping.city
+        initial['pincode'] = shipping.pincode
+        initial['state'] = shipping.state
+        initial['country'] = shipping.country
+        initial['email'] = shipping.email
+        initial['phone'] = shipping.phone
+        return initial
+
+    def form_valid(self, form):
+        user = self.request.user
+        customer = Customer.objects.get(user = user)
+        shipping = ShippingAddress.objects.get(customer = customer)
+
+        shipping.address = form.cleaned_data['address']
+        shipping.address2 = form.cleaned_data['address2']
+        shipping.isd_code = form.cleaned_data['isd_code']
+        shipping.city = form.cleaned_data['city']
+        shipping.pincode = form.cleaned_data['pincode']
+        shipping.state = form.cleaned_data['state']
+        shipping.country = form.cleaned_data['country']
+        shipping.email = form.cleaned_data['email']
+        shipping.phone = form.cleaned_data['phone']
+
+        shipping.save()
+
+        messages.success(self.request, _('Data has been successfully updated.'))
+        return redirect('accounts:change_shippingInfo')
 
 class ChangeEmailView(LoginRequiredMixin, FormView):
     template_name = 'accounts/profile/change_email.html'

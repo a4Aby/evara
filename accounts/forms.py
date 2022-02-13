@@ -219,6 +219,19 @@ class ChangeProfileForm(forms.Form):
     last_name = forms.CharField(label=_('Last name'), max_length=150, required=False)
 
 
+class ChangeShippingForm(forms.Form):
+    address = forms.CharField(label=_('Shipping Address'), max_length=150, required=False)
+    address2 = forms.CharField(label=_('Shipping Address 2'), max_length=150, required=False)
+    isd_code = forms.CharField(label=_('Shipping ISD Code'), max_length=150, required=False)
+    city = forms.CharField(label=_('Shipping City'), max_length=150, required=False)
+    pincode = forms.CharField(label=_('Shipping Pincode'), max_length=150, required=False)
+    state = forms.CharField(label=_('Shipping State'), max_length=150, required=False)
+    country = forms.CharField(label=_('Shipping Country'), max_length=150, required=False)
+    email = forms.EmailField(label=_('Shipping Email'), max_length=150, required=False)
+    phone = forms.CharField(label=_('Shipping Phone'), max_length=150, required=False)
+
+
+
 class ChangeEmailForm(forms.Form):
     email = forms.EmailField(label=_('Email'))
 
@@ -237,7 +250,6 @@ class ChangeEmailForm(forms.Form):
             raise ValidationError(_('You can not use this mail.'))
 
         return email
-
 
 class RemindUsernameForm(UserCacheMixin, forms.Form):
     email = forms.EmailField(label=_('Email'))

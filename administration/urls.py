@@ -28,5 +28,6 @@ urlpatterns = [
     path('delete-size/<int:id>',views.sizeDelete,name="delete size"),
     path('showVariants',views.showVariants,name='showVariants'),
     path('add-variant/<int:parant>',views.addVariants,name="showVariants"),
-    path('insertVariants',views.insertVariants,name="insertVariants")
+    path('insertVariants',views.insertVariants,name="insertVariants"),
+    path('addToShip',views.addToShip,name="addToShip"),
 ]
