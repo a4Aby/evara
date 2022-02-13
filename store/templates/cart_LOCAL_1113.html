@@ -1,0 +1,114 @@
+{% extends 'home_base.html' %}
+
+    {% block content %}
+<main class="main">
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb"> <a href="/" rel="nofollow">Home</a> <span></span> Shop <span></span> Your Cart </div>
+    </div>
+  </div>
+  <section class="mt-50 mb-50">
+    <div class="container">
+      <div class="row">
+        <div class="col-8">
+          <div class="table-responsive">
+            <table class="table shopping-summery text-center clean" id="cartList">
+              <thead>
+                <tr class="main-heading">
+                  <th scope="col">Image</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Subtotal</th>
+                  <th scope="col">Remove</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in items %}
+                  <input type="hidden" form="placeOrder" name="orderItems" value="{{item.id}}" >
+                <tr class="data-tr" >
+                  <td class="image product-thumbnail"><img src="/media/{{item.product.prd_image}}" alt="#"></td>
+                  <td class="product-des product-name"><h5 class="product-name"><a href="shop-product-right.html">{{item.product.prd_name}}</a></h5>
+                    <p class="font-xs">{{item.product.prd_description}} </p></td>
+                  <td class="price" data-title="Price" data-price="{{item.product.prd_price}}"><span>&#8377;{{item.product.prd_price}} </span></td>
+                  <td class="text-center quantity" data-title="Stock">
+                    <input class="qty-val" form="placeOrder" type="number" name="quantity"  value="{{item.quantity}}" max="5" min="1" >
+                  </td>
+                  <td class="text-right subTotal" data-currency="₹"><span>&#8377;{{item.get_total|floatformat:2}} </span></td>
+                  <td class="action" data-title="Remove"><a href="/store/deleteCart/{{item.id}}" class="text-muted"><i class="fi-rs-trash"></i></a></td>
+                </tr>
+                {% endfor %}
+                <tr>
+                  <td colspan="6" class="text-end"><a class="btn" href="/store/clearCart"> <i class="fi-rs-cross mr-10"></i>Clear Cart</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+		  </div>
+		  <div class="col-lg-4">
+              <div class="border-radius cart-totals">
+                <div class="heading_s1 mb-3 mt-3">
+                  <h5>Cart Total</h5>
+                </div>
+                <div class="table-responsive">
+                  <table class="table mb-10">
+                    <tbody>
+                      <tr>
+                        <td class="cart_total_label">Total Price</td>
+                        <td class="cart_total_amount"><span class="font-lg fw-900 text-brand" id="totalPrice">&#8377;{{order.get_cart_total|floatformat:2}}</span></td>
+                      </tr>
+                    
+						<tr>
+                        <td class="cart_total_label">Tax</td>
+                        <td class="cart_total_amount"><strong><span class="font-lg fw-900 text-brand">&#8377;0</span></strong></td>
+                      </tr>
+						  <tr>
+                        <td class="cart_total_label">Delivery Charges</td>
+                        <td class="cart_total_amount"><span class="font-lg fw-900 text-brand"> &#8377;0</td>
+                      </tr>
+                      <tr>
+                        <td class="cart_total_label">Final Price</td>
+                        <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand" id="finalPrice">&#8377;{{order.get_cart_total|floatformat:2}}</span></strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <form id="placeOrder">
+                {% csrf_token %}
+              </form>
+
+			   <div class="payment_method">
+              <div class="payment_option">
+                <div class="cart-action text-end"> 
+                  <a href="/" class="btn mr-10"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
+                    <!-- <a class="btn  mr-0 mb-sm-15 ">
+                      <i class="fi-rs-box-alt mr-10">
+                      </i>
+                    </a> -->
+                    <button class="btn  mr-0 mb-sm-15" form="placeOrder" value="Place Order"  >
+                      <i class="fi-rs-box-alt mr-10">
+                        Place Order
+                      </i>
+                    </button>
+                </div>
+
+				  <div class="d-flex justify-content-end">
+				     <h5 class="text-end mt-15 mb-10 justify-content-start">Payment Option : </h5>
+				       <div class="custome-radio text-end mt-10 ml-10 justify-content-end">
+						  
+                  <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" checked="">
+						
+                  <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Cash on delivery</label>
+                </div>
+				   </div>
+              </div>
+            </div>
+            </div>
+		</div>
+		
+      </div>
+   
+  </section>
+  
+</main>{% endblock %}

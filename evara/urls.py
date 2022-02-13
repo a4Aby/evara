@@ -29,4 +29,5 @@ urlpatterns = [
     path('superuser/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('', include('store.urls')),
+    path('', include('dj_razorpay.urls')),
 ]+static(settings.MEDIA_URL,document_root =settings.MEDIA_ROOT)

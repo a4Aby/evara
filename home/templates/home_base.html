@@ -1028,9 +1028,21 @@
     $( "#placeOrder" ).on( "submit", function( event ) {
         event.preventDefault();
         var placeOrder = $('#placeOrder').serialize();
-        $.post( "{% url 'store:placeOrder' %}",placeOrder, function( data ) {
-            toastr.success(data.message);
-        }, "json");
+        var payment_option = $("input[name='payment_option']:checked").val();
+        if(payment_option == 'razorpay'){
+            
+            //$(location).prop('href', "{% url 'dj_razorpay:payment_load' %}");
+            /*
+            $.post("{% url 'dj_razorpay:payment_load' %}",placeOrder,function( data ){
+                
+            },"JSON");
+            */
+            
+        }else{    
+            $.post( "{% url 'store:placeOrder' %}",placeOrder, function( data ) {
+                toastr.success(data.message);
+            }, "json");
+        }
     });
   </script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
@@ -1062,6 +1074,42 @@
   {% endif %}
   <!-- Cart  JS -->
   <script src="/static/js/cart.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  $( document ).ready(function() {
+    var placeOrder = $('#placeOrder').serialize();
+    $.post("{% url 'dj_razorpay:payment_load' %}",placeOrder,function( data ){
+  var options = {
+       
+    // Enter the Key ID generated from the Dashboard
+    key: data.razorpay_merchant_key,
+     
+    // Amount is in currency subunits.
+    // Default currency is INR. Hence,
+    // 50000 refers to 50000 paise
+    amount: data.razorpay_amount,
+    currency: data.currency,
+     
+    // Your/store name.
+    name: "Dj Razorpay",
+     
+    // Pass the `id` obtained in the response of Step 1
+    order_id: data.razorpay_order_id,
+    callback_url: data.callback_url,
+  };
+   
+  // initialise razorpay with the options.
+  var rzp1 = new Razorpay(options);
+   
+  // add event listener to the payment button.
+  document.getElementById("pay-btn").onclick = function (e) {
+    rzp1.open();
+    e.preventDefault();
+  };
+
+},"JSON");
+});
+</script>
   
 </body>
 
